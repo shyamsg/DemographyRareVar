@@ -18,7 +18,8 @@ Members of the class:
 ### Methods:###
 - constructors
 - parseMACSOutput
-- 
+- getVariants
+- getTree
 - destructor
 
 */
@@ -26,8 +27,43 @@ Members of the class:
 
 #include "newickTreeNode.h"
 #include <vector>
+#include <string>
+
+using namespace std;
 
 class ARG {
   vector<newickTreeNode *> treeList; /**< List of trees that make up the ARG*/
-  
+  vector<int> treeSeqLengths; /**< Vector containing the lengths of the sequences for each tree*/
+  vector<vector<bool> > polymorphisms; /**< Matrix of polymorphisms - stored as 0/1*/
+  vector<int> variantPos; /**< Position of SNPs */
+
+  /**
+   Function to read variant line in MACS output and add this variant
+   to the vector of variants. 
+   */
+  void getVariants(string & line);
+
+  /**
+   Function to read the tree line in MACS output and add the tree to the
+   list of trees.
+   */
+  void getTree(string & line);
+
+public:
+  /**
+   Constructor - does nothing :) 
+   */
+  ARG() {};
+
+  /**
+   Function to parse the MACS output and populate the attributes of the class.
+   Generates the trees from the output and stores the polymorphisms for processing.
+   */
+  void parseMACSOutput(ifstream macsFile);
+
+  /**
+   Destructor - delete all the trees and empty the vectors.
+   */
+  ~ARG();
+
 }
