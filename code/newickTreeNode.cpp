@@ -1,5 +1,4 @@
-#include "newickTreeNode.hpp"
-#include <stdlib>
+#include "newickTreeNode.h"
 #include <iostream>
 
 newickTreeNode::newickTreeNode() {
@@ -9,11 +8,11 @@ newickTreeNode::newickTreeNode() {
   this->parent = NULL;
 
   // Set the other attributes to defaults
-  this->length = 0;
+  this->branchLen = 0;
   this->minLeafNode=-1;
 }
 
-newickTreeNode::newickTreeNode(int branchLen, newickTreeNode * parent) {
+newickTreeNode::newickTreeNode(float branchLen, newickTreeNode * parent) {
   // Set the child nodes to NULL and leaf node to default
   this->leftSubTree = NULL;
   this->rightSubTree = NULL;
@@ -39,11 +38,14 @@ bool newickTreeNode::isLeaf() {
 }
 
 void newickTreeNode::switchNodes() {
+  //  std::cout << branchLen << "{" << minLeafNode << "}" << std::endl;
   if (rightSubTree == NULL) return;
   if (leftSubTree == NULL) {
     leftSubTree = rightSubTree;
     rightSubTree = NULL;
+    return;
   }
+  //  std::cout << " ---- " << leftSubTree->minLeafNode << " - " << rightSubTree->minLeafNode << " ---- " << std::endl;
   if (leftSubTree->minLeafNode > rightSubTree->minLeafNode) {
     newickTreeNode * temp = leftSubTree;
     leftSubTree = rightSubTree;
@@ -51,7 +53,7 @@ void newickTreeNode::switchNodes() {
   }
 }
 
-bool newickTreeNode::operator== (const newTreeNode & other) const {
+bool newickTreeNode::operator== (const newickTreeNode & other) const {
   //Check that the trees under the node are the same.
   if (this->branchLen != other.branchLen)
     return false;
@@ -74,3 +76,21 @@ bool newickTreeNode::operator== (const newTreeNode & other) const {
   return true;
 }
 
+void newickTreeNode::printTree() {
+  if (!this->isLeaf()) std::cout << "(";
+  if (this->isLeaf()) {
+    std::cout << minLeafNode; 
+  } else {
+    if (leftSubTree != NULL)
+      leftSubTree->printTree();
+    std::cout <<",";
+    if (rightSubTree != NULL)
+      rightSubTree->printTree();
+  }
+  if (!this->isLeaf()) std::cout << ")";
+  if (this->isRoot()) {
+    std::cout << std::endl;
+  } else {
+    std::cout << ":" << branchLen;
+  }
+}
