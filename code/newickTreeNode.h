@@ -79,6 +79,11 @@ public:
   bool operator== (const newickTreeNode & other) const;
 
   /**
+    Return pointer to leaf node with chosen label.
+   */
+  newickTreeNode * findLeaf(int leafNodeName);
+
+  /**
      Prints newick trees using the bracket representation.
    */
   void printTree();

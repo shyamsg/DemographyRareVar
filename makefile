@@ -1,5 +1,11 @@
+CPPVERSION:=$(shell expr `g++ -dumpversion | cut -f1-2 -d.` \>= 4.4)
 
-CXXFLAGS=--std=c++11
+CXXFLAGS=
+ifeq (${CPPVERSION}, "1")
+    CXXFLAGS += -std=c++11
+endif
+
+
 LDFLAGS=-O3
 
 all: tester

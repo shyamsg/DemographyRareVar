@@ -76,6 +76,26 @@ bool newickTreeNode::operator== (const newickTreeNode & other) const {
   return true;
 }
 
+newickTreeNode * newickTreeNode::findLeaf(int leafNodeName) {
+    if (this->isLeaf()) {
+      if (this->minLeafNode == leafNodeName)
+	return this;
+      else
+	return NULL;
+    } else {
+      newickTreeNode * leftNewickTree = leftSubTree->findLeaf(leafNodeName);
+      if (leftNewickTree != NULL) {
+	return leftNewickTree;
+      }
+      newickTreeNode * rightNewickTree = rightSubTree->findLeaf(leafNodeName);
+      if (rightNewickTree != NULL) {
+	return rightNewickTree;
+      }
+    }
+    return NULL;
+}
+
+
 void newickTreeNode::printTree() {
   if (!this->isLeaf()) std::cout << "(";
   if (this->isLeaf()) {

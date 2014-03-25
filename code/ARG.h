@@ -41,8 +41,8 @@ class ARG {
   /**
      Helper attributes for tokenizing to parse tree.
    */
-  const char sqClose = ']';
-  const char sqOpen = '[';
+  const static char sqClose = ']';
+  const static char sqOpen = '[';
 
   /**
      Function to read variant line in MACS output and add this variant
