@@ -14,6 +14,8 @@
    - treeVector
    - treeSeqLengths
    - polymorphisms
+   - variantPos
+   - regionLength
    
    ### Methods:###
    - constructors

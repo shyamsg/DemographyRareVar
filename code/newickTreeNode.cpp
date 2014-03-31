@@ -9,14 +9,12 @@ newickTreeNode::newickTreeNode() {
 
   // Set the other attributes to defaults
   this->branchLen = 0;
-  this->minLeafNode=-1;
 }
 
 newickTreeNode::newickTreeNode(float branchLen, newickTreeNode * parent) {
   // Set the child nodes to NULL and leaf node to default
   this->leftSubTree = NULL;
   this->rightSubTree = NULL;
-  this->minLeafNode = -1;
 
   // Set the length and parent to inputs
   this->parent = parent;
@@ -38,15 +36,15 @@ bool newickTreeNode::isLeaf() {
 }
 
 void newickTreeNode::switchNodes() {
-  //  std::cout << branchLen << "{" << minLeafNode << "}" << std::endl;
+  //  std::cout << branchLen << "{" << minLeafNode() << "}" << std::endl;
   if (rightSubTree == NULL) return;
   if (leftSubTree == NULL) {
     leftSubTree = rightSubTree;
     rightSubTree = NULL;
     return;
   }
-  //  std::cout << " ---- " << leftSubTree->minLeafNode << " - " << rightSubTree->minLeafNode << " ---- " << std::endl;
-  if (leftSubTree->minLeafNode > rightSubTree->minLeafNode) {
+  //  std::cout << " ---- " << leftSubTree->minLeafNode() << " - " << rightSubTree->minLeafNode() << " ---- " << std::endl;
+  if (leftSubTree->minLeafNode() > rightSubTree->minLeafNode()) {
     newickTreeNode * temp = leftSubTree;
     leftSubTree = rightSubTree;
     rightSubTree = temp;
@@ -57,7 +55,7 @@ bool newickTreeNode::operator== (const newickTreeNode & other) const {
   //Check that the trees under the node are the same.
   if (this->branchLen != other.branchLen)
     return false;
-  if (this-> minLeafNode != other.minLeafNode)
+  if (this-> leafList != other.leafList)
     return false;
   if (this->leftSubTree != NULL)
     if (this->rightSubTree != NULL)
@@ -78,7 +76,7 @@ bool newickTreeNode::operator== (const newickTreeNode & other) const {
 
 newickTreeNode * newickTreeNode::findLeaf(int leafNodeName) {
     if (this->isLeaf()) {
-      if (this->minLeafNode == leafNodeName)
+      if (this->minLeafNode() == leafNodeName)
 	return this;
       else
 	return NULL;
@@ -95,11 +93,15 @@ newickTreeNode * newickTreeNode::findLeaf(int leafNodeName) {
     return NULL;
 }
 
+int newickTreeNode::minLeafNode(){
+  if (leafList.empty()) return -1;
+  return *(leafList.begin());
+}
 
 void newickTreeNode::printTree() {
   if (!this->isLeaf()) std::cout << "(";
   if (this->isLeaf()) {
-    std::cout << minLeafNode; 
+    std::cout << minLeafNode(); 
   } else {
     if (leftSubTree != NULL)
       leftSubTree->printTree();
@@ -113,4 +115,20 @@ void newickTreeNode::printTree() {
   } else {
     std::cout << ":" << branchLen;
   }
+}
+
+bool newickTreeNode::isCommonAncestor(const set<int> givenNodes) {
+  for set<int>::
+}
+
+newickTreeNode * newickTreeNode::findMRCANode(const set<int> givenNodes) {
+  if (this->isRoot())
+    if (!(this->isCommonAncestor(givenNodes)))
+      return NULL;
+  if (this->leftSubTree->isCommonAncestor(givenNodes))
+    return leftSubTree->findMRCANode(givenNodes);
+  else if (this->rightSubTree->isCommonAncestor(givenNodes))
+    return rightSubTree->findMRCANode(givenNodes);
+  else
+    return this;
 }

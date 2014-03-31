@@ -82,12 +82,11 @@ void ARG::getTree(string & line){
     case ')':
       { // End of the subtree, go to parent
 	currentNode = currentNode->parent;
-	if (currentNode->leftSubTree->minLeafNode > currentNode->rightSubTree->minLeafNode) {
-	  currentNode->minLeafNode = currentNode->rightSubTree->minLeafNode;
+	currentNode->leafList.insert(currentNode->leftSubTree->leafList.begin(), currentNode->leftSubTree->leafList.end());
+	currentNode->leafList.insert(currentNode->rightSubTree->leafList.begin(), currentNode->rightSubTree->leafList.end());
+	if (currentNode->leftSubTree->minLeafNode() > currentNode->rightSubTree->minLeafNode()) {
 	  currentNode->switchNodes();
-	} else {
-	  currentNode->minLeafNode = currentNode->leftSubTree->minLeafNode;
-	}
+	} 
 	countBracks--;
 	break;
       }
@@ -95,7 +94,7 @@ void ARG::getTree(string & line){
       {
 	string temp1 = temp.substr(index);
 	if (isName){
-	  currentNode->minLeafNode = stoi(temp1, &sz);
+	  currentNode->leafList.insert(stoi(temp1, &sz));
 	} else {
 	  currentNode->branchLen = stof(temp1, &sz);
 	}
@@ -141,7 +140,11 @@ void ARG::parseMACSOutput(const char * macsFileName){
     copy(polymorphisms[i].begin(), polymorphisms[i].end(), ostream_iterator<bool>(cout, ""));
     cout << endl;
   }
-  for (int i=0; i < treeList.size(); i++) treeList[i]->printTree();
+  for (int i=0; i < treeList.size(); i++) { 
+    treeList[i]->printTree();
+    copy(treeList[i]->leafList.begin(), treeList[i]->leafList.end(), ostream_iterator<int>(cout, ","));
+    cout << endl;
+  }
   macsfile.close();
 }
 
