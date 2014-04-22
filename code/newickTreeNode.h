@@ -1,6 +1,6 @@
 /**
    Newick Tree Node Class
-   =====================
+   ======================
    
    This class codes the newick trees that are output by the macs. 
    The tree contains the relationships between the different haplotypes;

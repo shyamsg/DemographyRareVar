@@ -12,4 +12,5 @@ int main(int argc, char * argv[])
 {
   ARG myArg;
   myArg.parseMACSOutput(argv[1]);
+  
 }
