@@ -1,5 +1,5 @@
 CPPVERSION:=$(shell expr `g++ -dumpversion | cut -f1-2 -d.` \>= 4.4)
-ifeq (${CPPVERSION}, "1")
+ifeq (${CPPVERSION}, 1)
 	CPP=g++
 else
 	CPP=g++47

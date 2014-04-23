@@ -117,11 +117,15 @@ void newickTreeNode::printTree() {
   }
 }
 
-bool newickTreeNode::isCommonAncestor(const set<int> givenNodes) {
-  for set<int>::
+bool newickTreeNode::isCommonAncestor(const std::set<int> givenNodes) {
+  for (std::set<int>::iterator iit = givenNodes.begin(); iit != givenNodes.end(); iit++) {
+    if (givenNodes.find(*iit) == givenNodes.end())
+      return false;
+  }
+  return true;
 }
 
-newickTreeNode * newickTreeNode::findMRCANode(const set<int> givenNodes) {
+newickTreeNode * newickTreeNode::findMRCANode(const std::set<int> givenNodes) {
   if (this->isRoot())
     if (!(this->isCommonAncestor(givenNodes)))
       return NULL;

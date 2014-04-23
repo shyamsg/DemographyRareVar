@@ -25,9 +25,9 @@ void ARG::getVariants(string & line) {
   string sub;
   for (int count=0; count < 6; count++, iss >> sub) {
     switch(count) {
-    case 1: 
-    case 2:
-    case 4:
+    case 1: cout << "1 " << sub << endl; break;
+    case 2: cout << "2 " << sub << endl; break;
+    case 4: cout << "3 " << sub << endl; break;
       break;
     case 3:
       variantPos.push_back(int(nearbyint(regionLength*stof(sub))));
