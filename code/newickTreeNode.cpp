@@ -119,7 +119,7 @@ void newickTreeNode::printTree() {
 
 bool newickTreeNode::isCommonAncestor(const std::set<int> givenNodes) {
   for (std::set<int>::iterator iit = givenNodes.begin(); iit != givenNodes.end(); iit++) {
-    if (givenNodes.find(*iit) == givenNodes.end())
+    if (leafList.find(*iit) == leafList.end())
       return false;
   }
   return true;
