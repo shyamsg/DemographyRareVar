@@ -36,7 +36,7 @@ class siteStat {
   float frequency;
 
   /**
-     Constructor. Set all the array counts to -1 and frequency to 0.
+     Constructor. Set all the array counts to -1 and frequency to -1.
   */
   siteStat();
 

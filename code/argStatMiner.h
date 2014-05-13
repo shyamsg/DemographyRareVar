@@ -11,14 +11,13 @@
    ### Attributes:###
    - statVector
    - localARG
-   
 
    ### Members:###
    - constructor
    - getStatsByDAC
    - getStatsForSite
    - destructor
-   
+
 */
 
 #include "siteStat.h"
@@ -26,8 +25,9 @@
 
 class argStatMiner {
  public:
-  vector<siteStat *> statVector;
-  ARG * localARG;
+  vector<siteStat *> statVector; /**< Each site has x number of stat structures where x 
+				    is number of derived alleles.*/
+  ARG * localARG; /**< The local copy of the ARG - still the full ARG.*/
 
   /**
      Constructor. Nothing to do.
@@ -37,7 +37,7 @@ class argStatMiner {
   /**
      Constructor. Initializes the ARG.
   */
-  
+  argStatMiner(ARG *topARG);
 
   /**
      This function obtains the stats for all sites with a certain derived
