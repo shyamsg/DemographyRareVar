@@ -15,6 +15,7 @@
    - treeSeqLengths
    - polymorphisms
    - variantPos
+   - mutTimes
    - regionLength
    
    ### Methods:###
@@ -38,6 +39,7 @@ class ARG {
   vector<int> treeSeqLengths; /**< Vector containing the lengths of the sequences for each tree*/
   vector<vector<bool> > polymorphisms; /**< Matrix of polymorphisms - stored as 0/1 */
   vector<int> variantPos; /**< Position of SNPs */
+  vector<float> mutTimes; /**< Times of mutations, in 2N generation units */
   int regionLength; /**< Length of simulated region */
 
   /**

@@ -25,12 +25,14 @@ void ARG::getVariants(string & line) {
   string sub;
   for (int count=0; count < 6; count++, iss >> sub) {
     switch(count) {
-    case 1: cout << "1 " << sub << endl; break;
-    case 2: cout << "2 " << sub << endl; break;
-    case 4: cout << "3 " << sub << endl; break;
+    case 1:
+    case 2: 
       break;
     case 3:
       variantPos.push_back(int(nearbyint(regionLength*stof(sub))));
+      break;
+    case 4:  
+      mutTimes.push_back(stof(sub));
       break;
     case 5: 
       polymorphisms.push_back(makeBitVector(sub));
