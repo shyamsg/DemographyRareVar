@@ -9,10 +9,12 @@ argStatMiner::argStatMiner(ARG *topARG) {
 }
 
 void argStatMiner::getStatsByDAC(int derivedCount) {
-
+  // Test sites to see if this site's dac fits the bill
+  // If it does, then do stuff for this site. 
+   
 }
 
-void argStatMiner::getStatsForSite() {
+void argStatMiner::getStatsForSite(set<int> &chosenLabels) {
   // Compute the length till first recombination out of core haplotype to
   // the left and right.
 
