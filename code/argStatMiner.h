@@ -22,6 +22,7 @@
 
 #include "siteStat.h"
 #include "argHelper.h"
+#include "ARG.h"
 #include <vector>
 
 class argStatMiner {
@@ -54,7 +55,7 @@ class argStatMiner {
      of second recombination and the counts of coalescing subtree for the lines
      with derived states at a given site. 
   */
-  void getStatsForSite();
+  void getStatsForSite(set<int> chosenLabels);
   
   /**
      Destructor. Empty the stats matrix. 

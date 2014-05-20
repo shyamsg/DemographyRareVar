@@ -35,13 +35,6 @@
 using namespace std;
 
 class ARG {
-  vector<newickTreeNode *> treeList; /**< List of trees that make up the ARG*/
-  vector<int> treeSeqLengths; /**< Vector containing the lengths of the sequences for each tree*/
-  vector<vector<bool> > polymorphisms; /**< Matrix of polymorphisms - stored as 0/1 */
-  vector<int> variantPos; /**< Position of SNPs */
-  vector<float> mutTimes; /**< Times of mutations, in 2N generation units */
-  int regionLength; /**< Length of simulated region */
-
   /**
      Helper attributes for tokenizing to parse tree.
    */
@@ -66,6 +59,13 @@ class ARG {
   vector<bool> makeBitVector(string token);
 
  public:
+  vector<newickTreeNode *> treeList; /**< List of trees that make up the ARG*/
+  vector<int> treeSeqLengths; /**< Vector containing the lengths of the sequences for each tree*/
+  vector<vector<bool> > polymorphisms; /**< Matrix of polymorphisms - stored as 0/1 */
+  vector<int> variantPos; /**< Position of SNPs */
+  vector<float> mutTimes; /**< Times of mutations, in 2N generation units */
+  int regionLength; /**< Length of simulated region */
+
   /**
      Constructor - does nothing :) 
   */

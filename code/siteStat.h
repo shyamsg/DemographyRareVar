@@ -51,7 +51,7 @@ class siteStat {
      Returns the proportion of population 1 vs 2 samples in the subtree
      that the line of this site coalesced into.
   */
-  float getPopProp();
+  float getPopProp(bool left);
 
   /**
      Default destructor. Nothing to do.

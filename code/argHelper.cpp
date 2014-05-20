@@ -20,7 +20,7 @@ set<int> argHelper::getDerivedIndices(vector<bool> & polys) {
   set<int> chosen;
   int curLabel = 0;
   for (vector<bool>::iterator vit = polys.begin(); vit < polys.end(); vit++, curLabel++) {
-    if (*vit) chosen.append(curLabel);
+    if (*vit) chosen.insert(curLabel);
   }
   return chosen;
 }

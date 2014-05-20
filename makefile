@@ -23,7 +23,7 @@ code/argStatMiner.o: code/argStatMiner.h code/argStatMiner.cpp code/ARG.h code/s
 code/main.o: code/ARG.h code/newickTreeNode.h code/argHelper.h code/siteStat.h code/argStatMiner.h code/main.cpp
 	${CPP} ${CXXFLAGS} ${LIBS} -o code/main.o -c code/main.cpp
 
-tester: code/newickTreeNode.o code/ARG.o code/main.o
+tester: code/newickTreeNode.o code/ARG.o code/siteStat.o code/argHelper.o code/argStatMiner.o code/main.o
 	${CPP} ${LDFLAGS} -o tester code/main.o code/ARG.o code/newickTreeNode.o code/argHelper.o code/siteStat.o code/argStatMiner.o
 
 clean:

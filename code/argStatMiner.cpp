@@ -13,7 +13,7 @@ void argStatMiner::getStatsByDAC(int maxDerivedCount) {
   // If it does, then do stuff for this site. 
   uint numsites = localARG->mutTimes.size();
   for (uint cnt=0; cnt < numsites; cnt++) {
-    vector<bool> & curPoly = polymorphisms[cnt];
+    vector<bool> & curPoly = localARG->polymorphisms[cnt];
     int curDAC = helper.siteCount(curPoly);
     // Site's DAC is greater than threshold.
     if (curDAC > maxDerivedCount) continue;
@@ -21,7 +21,7 @@ void argStatMiner::getStatsByDAC(int maxDerivedCount) {
   }
 }
 
-void argStatMiner::getStatsForSite(set<int> &chosenLabels) {
+void argStatMiner::getStatsForSite(set<int> chosenLabels) {
   // Compute the length till first recombination out of core haplotype to
   // the left and right.
 
