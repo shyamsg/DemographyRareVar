@@ -40,11 +40,11 @@ class argStatMiner {
   argStatMiner(ARG *topARG);
 
   /**
-     This function obtains the stats for all sites with a certain derived
-     allele count (DAC). It calls the getStatsForSite function for each site
-     making sure that these sites get stored under the appropriate DAC. 
+     This function obtains the stats for all sites with less than certain derived
+     allele count (DAC). It calls the getStatsForSite function for each site making
+     sure that these sites get stored under the appropriate DAC. 
   */
-  void getStatsByDAC(int derivedCount);
+  void getStatsByDAC(int maxDerivedCount);
 
   /**
      This function obtains the stats such as core haplotype length, the length
