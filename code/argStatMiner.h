@@ -25,6 +25,8 @@
 #include "ARG.h"
 #include <vector>
 
+typedef unsigned int uint;
+
 class argStatMiner {
   ARG * localARG; /**< The local copy of the ARG - still the full ARG.*/
   argHelper helper; /**< Helper class for the ARG. */
