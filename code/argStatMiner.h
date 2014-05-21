@@ -31,6 +31,16 @@ class argStatMiner {
   ARG * localARG; /**< The local copy of the ARG - still the full ARG.*/
   argHelper helper; /**< Helper class for the ARG. */
 
+  /**
+     Get the statistics for this site going right. 
+  */
+  void getStatsRight(set<int> chosenLabels, uint treeIndex);
+
+  /**
+     Get the statistics for this site going left. 
+  */
+  void getStatsLeft(set<int> chosenLabels, uint treeIndex);
+
  public:
   vector<siteStat *> statVector; /**< Each site has x number of stat structures where x 
 				    is number of derived alleles.*/
@@ -57,7 +67,7 @@ class argStatMiner {
      of second recombination and the counts of coalescing subtree for the lines
      with derived states at a given site. 
   */
-  void getStatsForSite(set<int> chosenLabels, uint treeIndex);
+  void getStatsForSite(set<int> chosenLabels, uint treeIndex, uint leftOnTree, uint rightOnTree);
   
   /**
      Destructor. Empty the stats matrix. 

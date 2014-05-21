@@ -1,4 +1,7 @@
 #include "argStatMiner.h"
+#include <pair>
+
+typedef pair<float, set<int> > pairstat;
 
 argStatMiner::argStatMiner() {
   // Nothing to do yet. Might change in the near future. 
@@ -23,15 +26,31 @@ void argStatMiner::getStatsByDAC(int maxDerivedCount) {
     int curDAC = helper.siteCount(curPoly);
     // Site's DAC is greater than threshold.
     if (curDAC > maxDerivedCount) continue;
-    getStatsForSite(helper.getDerivedIndices(curPoly), curTreeIndex);
+    // Get stats for this site - compute the left and right lengths
+    // on this sequence before switching trees - leftOnTree and rightOnTree.
+    // computed with respect to the current poly's position. 
+    uint leftOnTree = localARG->variantPos[cnt] - (totalTreeLengths - localARG->treeSeqLengths[curTreeIndex]);
+    uint rightOnTree = totalTreeLengths - localARG->variantPos[cnt];
+    getStatsForSite(helper.getDerivedIndices(curPoly), curTreeIndex, leftOnTree, rightOnTree);
   }
 }
 
-void argStatMiner::getStatsForSite(set<int> chosenLabels, uint treeIndex) {
-  // Get the tree for this site
-  
+void argStatMiner::getStatsForSite(set<int> chosenLabels, uint treeIndex, uint leftOnTree, uint rightOnTree) {
+  siteStat* stats = new siteStat[chosenLabels.size()];
+  getStatsRight(chosenLabels, treeIndex, rightOnTree, stats);
+  getStatsLeft(chosenLabels, treeIndex, leftOnTree, stats);
+}
+
+void argStatMiner::getStatsRight(set<int> chosenLabels, uint treeIndex, siteStat * stats) {
+  uint DAC = chosenLabels.size();
+  // Initialize the stats with the remaining on tree stuff
+  for (uint i = 0; i < DAC; i++) {
+    stats[i]->lenCore[1] = rightOnTree
+  } 
+  vector<pairstat> siteInfo; 
   // Compute the length till first recombination out of core haplotype to
-  // the left and right.
+  // the right.
+
 
   // Keep track of which lineage it joins - from this extract the number
   // of pop1 and pop2 members in that subtree.
@@ -39,3 +58,17 @@ void argStatMiner::getStatsForSite(set<int> chosenLabels, uint treeIndex) {
   // Compute the length of the second recombination
 
 }
+
+void argStatMiner::getStatsLeft(set<int> chosenLabels, uint treeIndex, siteStat * stats) {
+  siteStat * stats = new siteStat[chosenLabels.size()];
+  // Compute the length till first recombination out of core haplotype to
+  // the left.
+
+
+  // Keep track of which lineage it joins - from this extract the number
+  // of pop1 and pop2 members in that subtree.
+
+  // Compute the length of the second recombination
+
+}
+

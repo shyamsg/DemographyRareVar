@@ -26,7 +26,6 @@ code/argHelper.o:	code/argHelper.h code/argHelper.cpp
 code/argStatMiner.o:	code/argStatMiner.h code/argStatMiner.cpp code/ARG.h code/siteStat.h code/argHelper.h
 	${CPP}	${CXXFLAGS} ${LIBS} -o code/argStatMiner.o -c code/argStatMiner.cpp
 code/main.o:	code/ARG.h code/newickTreeNode.h code/argHelper.h code/siteStat.h code/argStatMiner.h code/main.cpp
-	echo ${OS}
 	${CPP}	${CXXFLAGS} ${LIBS} -o code/main.o -c code/main.cpp
 
 tester:	code/newickTreeNode.o code/ARG.o code/siteStat.o code/argHelper.o code/argStatMiner.o code/main.o
