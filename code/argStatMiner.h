@@ -1,49 +1,65 @@
-#include "argStatMiner.h"
+/**
+   ARG Statistics Miner
+   ====================
 
-argStatMiner::argStatMiner() {
-  // Nothing to do yet. Might change in the near future. 
-}
+   This class encodes the functions that will parse the ARG to 
+   compute the statistics that are needed to be computed from 
+   the ARG. 
 
-argStatMiner::argStatMiner(ARG *topARG) {
-  localARG = topARG;
-}
+   Members of the class:
+   ---------------------
+   ### Attributes:###
+   - statVector
+   - localARG
 
-void argStatMiner::getStatsByDAC(int maxDerivedCount) {
-  // Test sites to see if this site's dac fits the bill
-  // If it does, then do stuff for this site. 
-  uint numsites = localARG->mutTimes.size();
-  uint curTreeIndex = -1;
-  uint totalTreeLengths = 0;
-  for (uint cnt=0; cnt < numsites; cnt++) {
-<<<<<<< HEAD
-    if (localARG->variantPos[cnt] > totalTreeLengths) {
-      curTreeIndex++;
-      totalTreeLengths += treeSeqLengths[curTreeIndex];
-    }
-    vector<bool> & curPoly = polymorphisms[cnt];
-=======
-    vector<bool> & curPoly = localARG->polymorphisms[cnt];
->>>>>>> 01b554c12447a2135edf8be4a64e50ee9ba2b8e9
-    int curDAC = helper.siteCount(curPoly);
-    // Site's DAC is greater than threshold.
-    if (curDAC > maxDerivedCount) continue;
-    getStatsForSite(helper.getDerivedIndices(curPoly), curTreeIndex);
-  }
-}
+   ### Members:###
+   - constructor
+   - getStatsByDAC
+   - getStatsForSite
+   - destructor
 
-<<<<<<< HEAD
-void argStatMiner::getStatsForSite(set<int> chosenLabels, uint treeIndex) {
-  // Get the tree for this site
+*/
+
+#include "siteStat.h"
+#include "argHelper.h"
+#include "ARG.h"
+#include <vector>
+
+class argStatMiner {
+  ARG * localARG; /**< The local copy of the ARG - still the full ARG.*/
+  argHelper helper; /**< Helper class for the ARG. */
+
+ public:
+  vector<siteStat *> statVector; /**< Each site has x number of stat structures where x 
+				    is number of derived alleles.*/
   
-=======
-void argStatMiner::getStatsForSite(set<int> chosenLabels) {
->>>>>>> 01b554c12447a2135edf8be4a64e50ee9ba2b8e9
-  // Compute the length till first recombination out of core haplotype to
-  // the left and right.
+  /**
+     Constructor. Nothing to do.
+  */
+  argStatMiner();
 
-  // Keep track of which lineage it joins - from this extract the number
-  // of pop1 and pop2 members in that subtree.
+  /**
+     Constructor. Initializes the ARG.
+  */
+  argStatMiner(ARG *topARG);
 
-  // Compute the length of the second recombination
+  /**
+     This function obtains the stats for all sites with less than certain derived
+     allele count (DAC). It calls the getStatsForSite function for each site making
+     sure that these sites get stored under the appropriate DAC. 
+  */
+  void getStatsByDAC(int maxDerivedCount);
 
-}
+  /**
+     This function obtains the stats such as core haplotype length, the length
+     of second recombination and the counts of coalescing subtree for the lines
+     with derived states at a given site. 
+  */
+  void getStatsForSite(set<int> chosenLabels);
+  
+  /**
+     Destructor. Empty the stats matrix. 
+  */
+  ~argStatMiner();
+
+};
