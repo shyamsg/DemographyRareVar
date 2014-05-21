@@ -15,15 +15,11 @@ void argStatMiner::getStatsByDAC(int maxDerivedCount) {
   uint curTreeIndex = -1;
   uint totalTreeLengths = 0;
   for (uint cnt=0; cnt < numsites; cnt++) {
-<<<<<<< HEAD
     if (localARG->variantPos[cnt] > totalTreeLengths) {
       curTreeIndex++;
       totalTreeLengths += treeSeqLengths[curTreeIndex];
     }
-    vector<bool> & curPoly = polymorphisms[cnt];
-=======
     vector<bool> & curPoly = localARG->polymorphisms[cnt];
->>>>>>> 01b554c12447a2135edf8be4a64e50ee9ba2b8e9
     int curDAC = helper.siteCount(curPoly);
     // Site's DAC is greater than threshold.
     if (curDAC > maxDerivedCount) continue;
@@ -31,13 +27,9 @@ void argStatMiner::getStatsByDAC(int maxDerivedCount) {
   }
 }
 
-<<<<<<< HEAD
 void argStatMiner::getStatsForSite(set<int> chosenLabels, uint treeIndex) {
   // Get the tree for this site
   
-=======
-void argStatMiner::getStatsForSite(set<int> chosenLabels) {
->>>>>>> 01b554c12447a2135edf8be4a64e50ee9ba2b8e9
   // Compute the length till first recombination out of core haplotype to
   // the left and right.
 
