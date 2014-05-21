@@ -55,7 +55,7 @@ class argStatMiner {
      of second recombination and the counts of coalescing subtree for the lines
      with derived states at a given site. 
   */
-  void getStatsForSite(set<int> chosenLabels);
+  void getStatsForSite(set<int> chosenLabels, uint treeIndex);
   
   /**
      Destructor. Empty the stats matrix. 

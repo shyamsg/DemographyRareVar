@@ -17,7 +17,7 @@ void argStatMiner::getStatsByDAC(int maxDerivedCount) {
   for (uint cnt=0; cnt < numsites; cnt++) {
     if (localARG->variantPos[cnt] > totalTreeLengths) {
       curTreeIndex++;
-      totalTreeLengths += treeSeqLengths[curTreeIndex];
+      totalTreeLengths += localARG->treeSeqLengths[curTreeIndex];
     }
     vector<bool> & curPoly = localARG->polymorphisms[cnt];
     int curDAC = helper.siteCount(curPoly);
