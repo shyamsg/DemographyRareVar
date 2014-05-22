@@ -1,4 +1,5 @@
 #include "newickTreeNode.h"
+#include <algorithm>
 #include <iostream>
 
 newickTreeNode::newickTreeNode() {
@@ -36,14 +37,14 @@ bool newickTreeNode::isLeaf() {
 }
 
 void newickTreeNode::switchNodes() {
-  //  std::cout << branchLen << "{" << minLeafNode() << "}" << std::endl;
+  //  cout << branchLen << "{" << minLeafNode() << "}" << endl;
   if (rightSubTree == NULL) return;
   if (leftSubTree == NULL) {
     leftSubTree = rightSubTree;
     rightSubTree = NULL;
     return;
   }
-  //  std::cout << " ---- " << leftSubTree->minLeafNode() << " - " << rightSubTree->minLeafNode() << " ---- " << std::endl;
+  //  cout << " ---- " << leftSubTree->minLeafNode() << " - " << rightSubTree->minLeafNode() << " ---- " << endl;
   if (leftSubTree->minLeafNode() > rightSubTree->minLeafNode()) {
     newickTreeNode * temp = leftSubTree;
     leftSubTree = rightSubTree;
@@ -99,33 +100,33 @@ int newickTreeNode::minLeafNode(){
 }
 
 void newickTreeNode::printTree() {
-  if (!this->isLeaf()) std::cout << "(";
+  if (!this->isLeaf()) cout << "(";
   if (this->isLeaf()) {
-    std::cout << minLeafNode(); 
+    cout << minLeafNode(); 
   } else {
     if (leftSubTree != NULL)
       leftSubTree->printTree();
-    std::cout <<",";
+    cout <<",";
     if (rightSubTree != NULL)
       rightSubTree->printTree();
   }
-  if (!this->isLeaf()) std::cout << ")";
+  if (!this->isLeaf()) cout << ")";
   if (this->isRoot()) {
-    std::cout << std::endl;
+    cout << endl;
   } else {
-    std::cout << ":" << branchLen;
+    cout << ":" << branchLen;
   }
 }
 
-bool newickTreeNode::isCommonAncestor(const std::set<int> givenNodes) {
-  for (std::set<int>::iterator iit = givenNodes.begin(); iit != givenNodes.end(); iit++) {
+bool newickTreeNode::isCommonAncestor(const set<int> givenNodes) {
+  for (set<int>::iterator iit = givenNodes.begin(); iit != givenNodes.end(); iit++) {
     if (leafList.find(*iit) == leafList.end())
       return false;
   }
   return true;
 }
 
-newickTreeNode * newickTreeNode::findMRCANode(const std::set<int> givenNodes) {
+newickTreeNode * newickTreeNode::findMRCANode(const set<int> givenNodes) {
   if (this->isRoot())
     if (!(this->isCommonAncestor(givenNodes)))
       return NULL;
@@ -135,4 +136,19 @@ newickTreeNode * newickTreeNode::findMRCANode(const std::set<int> givenNodes) {
     return rightSubTree->findMRCANode(givenNodes);
   else
     return this;
+}
+
+vector<pairstat> newickTreeNode::getLineage(int leafNodeName) {
+  vector<pairstat> lineage;
+  newickTreeNode * leafNode = findLeaf(leafNodeName);
+  while(!leafNode->isRoot()) {
+    pairstat temp;
+    temp.first = leafNode->branchLen;
+    set_difference(leafNode->leafList.begin(), leafNode->leafList.end(), 
+		   lineage.back().second.begin(), lineage.back().second.end(),
+		   inserter(temp.second, temp.second.begin()));
+    lineage.push_back(temp);
+    leafNode = leafNode->parent;
+  }
+  return lineage;
 }

@@ -1,7 +1,4 @@
 #include "argStatMiner.h"
-#include <pair>
-
-typedef pair<float, set<int> > pairstat;
 
 argStatMiner::argStatMiner() {
   // Nothing to do yet. Might change in the near future. 
@@ -41,13 +38,22 @@ void argStatMiner::getStatsForSite(set<int> chosenLabels, uint treeIndex, uint l
   getStatsLeft(chosenLabels, treeIndex, leftOnTree, stats);
 }
 
-void argStatMiner::getStatsRight(set<int> chosenLabels, uint treeIndex, siteStat * stats) {
+void argStatMiner::getStatsRight(set<int> chosenLabels, uint treeIndex, uint remTree, siteStat * stats) {
   uint DAC = chosenLabels.size();
   // Initialize the stats with the remaining on tree stuff
   for (uint i = 0; i < DAC; i++) {
-    stats[i]->lenCore[1] = rightOnTree
-  } 
-  vector<pairstat> siteInfo; 
+    stats[i].lenCore[1] = remTree;
+  }
+  // Each sample that carries the derived allele will have a vector of these pairstats -
+  // tracing their lineage back to root.
+  newickTreeNode * curTree = localARG->treeList[treeIndex];
+  vector<vector<pairstat> > siteInfo = vector<vector<pairstat> >(DAC); 
+
+  for (uint i = 0, set<int>::iterator sit = chosenLabels.begin(); sit != chosenLabels.end(); sit++, i++) {
+    siteInfo[i] = curTree->curTree.getLineage(*sit);
+  }
+
+  for (;;)
   // Compute the length till first recombination out of core haplotype to
   // the right.
 
@@ -59,8 +65,8 @@ void argStatMiner::getStatsRight(set<int> chosenLabels, uint treeIndex, siteStat
 
 }
 
-void argStatMiner::getStatsLeft(set<int> chosenLabels, uint treeIndex, siteStat * stats) {
-  siteStat * stats = new siteStat[chosenLabels.size()];
+void argStatMiner::getStatsLeft(set<int> chosenLabels, uint treeIndex, uint remTree, siteStat * stats) {
+
   // Compute the length till first recombination out of core haplotype to
   // the left.
 

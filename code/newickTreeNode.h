@@ -32,13 +32,19 @@
 */
 
 #include <set>
+#include <utility>
+#include <vector>
+
+using namespace std;
+
+typedef pair<float, set<int> > pairstat;
 
 class newickTreeNode {  
  public:
   newickTreeNode * leftSubTree; /**< Left sub-tree.*/
   newickTreeNode * rightSubTree; /**< Right sub-tree.*/
   newickTreeNode * parent; /**< Parent node.*/
-  std::set<int> leafList; /**< List of leaves under this node */
+  set<int> leafList; /**< List of leaves under this node */
   float branchLen; /**< Branch length*/
   
   /**
@@ -102,10 +108,16 @@ class newickTreeNode {
   /**
      Is this node a common ancestor to the given set of nodes.
   */
-  bool isCommonAncestor(const std::set<int> givenNodes);
+  bool isCommonAncestor(const set<int> givenNodes);
 
   /**
      Finds the node which is the MRCA of the given set of nodes.
   */
-  newickTreeNode * findMRCANode(const std::set<int> givenNodes);
+  newickTreeNode * findMRCANode(const set<int> givenNodes);
+
+  /**
+     Return the lineage details of the current thing.
+  */
+  vector<pairstat> getLineage(int leafNodeName);
+
 };

@@ -34,12 +34,12 @@ class argStatMiner {
   /**
      Get the statistics for this site going right. 
   */
-  void getStatsRight(set<int> chosenLabels, uint treeIndex);
+  void getStatsRight(set<int> chosenLabels, uint treeIndex, uint remTree, siteStat * stats);
 
   /**
      Get the statistics for this site going left. 
   */
-  void getStatsLeft(set<int> chosenLabels, uint treeIndex);
+  void getStatsLeft(set<int> chosenLabels, uint treeIndex, uint remTree, siteStat * stats);
 
  public:
   vector<siteStat *> statVector; /**< Each site has x number of stat structures where x 
