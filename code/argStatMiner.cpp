@@ -48,12 +48,13 @@ void argStatMiner::getStatsRight(set<int> chosenLabels, uint treeIndex, uint rem
   // tracing their lineage back to root.
   newickTreeNode * curTree = localARG->treeList[treeIndex];
   vector<vector<pairstat> > siteInfo = vector<vector<pairstat> >(DAC); 
-
   for (uint i = 0, set<int>::iterator sit = chosenLabels.begin(); sit != chosenLabels.end(); sit++, i++) {
     siteInfo[i] = curTree->curTree.getLineage(*sit);
   }
-
-  for (;;)
+  vector<int> nrecomb = vector<int>(DAC, 0)
+  for (uint i = treeIndex+1; i < localARG->treeList.size(); i++) {
+    
+  }
   // Compute the length till first recombination out of core haplotype to
   // the right.
 
