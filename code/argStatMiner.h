@@ -41,6 +41,16 @@ class argStatMiner {
   */
   void getStatsLeft(set<int> chosenLabels, uint treeIndex, uint remTree, siteStat * stats);
 
+  /**
+     Compare the lineage histories, returns true if recombination occurred.
+  */
+  bool isRecombined(const vector<pairstat> first, const vector<pairstat> second);
+
+  /**
+     Extract information from lineage histories if they are different.
+   */
+  void extractLineageDiffs(const vector<pairstat> first, const vector<pairstat> second);
+
  public:
   vector<siteStat *> statVector; /**< Each site has x number of stat structures where x 
 				    is number of derived alleles.*/

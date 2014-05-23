@@ -33,49 +33,72 @@ void argStatMiner::getStatsByDAC(int maxDerivedCount) {
 }
 
 void argStatMiner::getStatsForSite(set<int> chosenLabels, uint treeIndex, uint leftOnTree, uint rightOnTree) {
+  uint DAC = chosenLabels.size();
   siteStat* stats = new siteStat[chosenLabels.size()];
-  getStatsRight(chosenLabels, treeIndex, rightOnTree, stats);
-  getStatsLeft(chosenLabels, treeIndex, leftOnTree, stats);
+  for(uint i = 0; i < stats.size(); i++) {
+    stats[i].frequency = DAC;
+    stats[i].lenCore[0] = leftOnTree;
+    stats[i].lenCore[1] = rightOnTree;
+    stats[i].lenSecondRecomb[0] = stats[i].lenSecondRecomb[1] = 0;
+  }
+  getStatsDirection(chosenLabels, treeIndex, stats, true);
+  getStatsDirection(chosenLabels, treeIndex, stats, false);
 }
 
-void argStatMiner::getStatsRight(set<int> chosenLabels, uint treeIndex, uint remTree, siteStat * stats) {
+void argStatMiner::getStatsDirection(set<int> chosenLabels, uint treeIndex, siteStat * stats, bool left) {
   uint DAC = chosenLabels.size();
-  // Initialize the stats with the remaining on tree stuff
-  for (uint i = 0; i < DAC; i++) {
-    stats[i].lenCore[1] = remTree;
-  }
+  uint i, j; // loop indices
+  set<int>::iterator sit; // set iterator
+  uint index = (left ? 0 : 1);
+  int increment = (left ? -1 : 1)
+
   // Each sample that carries the derived allele will have a vector of these pairstats -
   // tracing their lineage back to root.
   newickTreeNode * curTree = localARG->treeList[treeIndex];
-  vector<vector<pairstat> > siteInfo = vector<vector<pairstat> >(DAC); 
-  for (uint i = 0, set<int>::iterator sit = chosenLabels.begin(); sit != chosenLabels.end(); sit++, i++) {
-    siteInfo[i] = curTree->curTree.getLineage(*sit);
+  vector<vector<pairstat> > prevLineages; 
+  for (sit = chosenLabels.begin(); sit != chosenLabels.end(); sit++) {
+    prevLineages.push_back(curTree->getLineage(*sit));
   }
-  vector<int> nrecomb = vector<int>(DAC, 0)
-  for (uint i = treeIndex+1; i < localARG->treeList.size(); i++) {
-    
+
+  // For each of the lineages that need to be looked at, keep track of the 
+  vector<int> nrecomb = vector<int>(DAC, 0);
+  vector<vector<pairstat> > curLineages;
+  // Go from current tree + 1 to the last or till all the stats are collected.
+  for (i = treeIndex+increment; (left ? (i >= 0) : (i < localARG->treeList.size())) ; i+=increment) {
+    // For the current tree, find the lineages and process to see if the current 
+    // lineage went through a recombination. If it did measure the appropriate stats 
+    curTree = localARG->treeList[i];
+    sit = chosenLabels.begin();
+    for (j = 0; j < DAC; j++, sit++) {
+      if (nrecomb[j] > 1) { // This lineage already has 2 recombs on it, so no need to process.
+	curLineages.push_back(vector<pairstat>());
+	continue;
+      }
+      vector<pairstat> curline = curTree->getLineage(*sit);
+      curLineages.push_back(curline);
+      if (nrecomb[j] == 1) { // number of recombs == 1, only looking for second recomb length.
+	if (isRecombined(prevLineages[j], curline)) {
+	  nrecomb[j]++;
+	} else {
+	  stats[j].lenSecondRecomb[index] += localARG->treeSeqLengths[i];
+	}
+      } else {
+      }
+      // get the lineage information for this lineage.
+    }
+    prevLineages = curLineages;
   }
-  // Compute the length till first recombination out of core haplotype to
-  // the right.
-
-
-  // Keep track of which lineage it joins - from this extract the number
-  // of pop1 and pop2 members in that subtree.
-
-  // Compute the length of the second recombination
-
 }
 
-void argStatMiner::getStatsLeft(set<int> chosenLabels, uint treeIndex, uint remTree, siteStat * stats) {
-
-  // Compute the length till first recombination out of core haplotype to
-  // the left.
-
-
-  // Keep track of which lineage it joins - from this extract the number
-  // of pop1 and pop2 members in that subtree.
-
-  // Compute the length of the second recombination
-
+bool isRecombined(const vector<pairstat> first, const vector<pairstat> second) {
 }
 
+void argStatMiner::extractLineageDiffs(const vector<pairstat> first, const vector<pairstat> second) {
+  // There are multiple scenarios for recombination -
+  // 1) the lineage splits off and joins at the same topology spot but at a more recent time
+  // 2) the lineage splits off and joins at the same topology spot byt at a less recent time
+  // 3) the lineage splits off and joins some other place on the core subtree - on core
+  // 4) the lineage splits off and joins outside the core subtree - off core
+
+
+}

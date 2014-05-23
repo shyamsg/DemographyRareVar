@@ -31,8 +31,8 @@ class siteStat {
  public:
   int lenCore[2];
   int lenSecondRecomb[2];
-  int leftConf[2];
-  int rightConf[2];
+  int numPop1[2];
+  int numPop2[2];
   float frequency;
 
   /**
