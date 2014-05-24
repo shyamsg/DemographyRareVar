@@ -32,24 +32,14 @@ class argStatMiner {
   argHelper helper; /**< Helper class for the ARG. */
 
   /**
-     Get the statistics for this site going right. 
+     Get the statistics for this site going right/left from the core tree. 
   */
-  void getStatsRight(set<int> chosenLabels, uint treeIndex, uint remTree, siteStat * stats);
-
-  /**
-     Get the statistics for this site going left. 
-  */
-  void getStatsLeft(set<int> chosenLabels, uint treeIndex, uint remTree, siteStat * stats);
+  void getStatsDirection(set<int> chosenLabels, uint treeIndex, siteStat * stats, bool left);
 
   /**
      Compare the lineage histories, returns true if recombination occurred.
   */
   bool isRecombined(const vector<pairstat> first, const vector<pairstat> second);
-
-  /**
-     Extract information from lineage histories if they are different.
-   */
-  void extractLineageDiffs(const vector<pairstat> first, const vector<pairstat> second);
 
  public:
   vector<siteStat *> statVector; /**< Each site has x number of stat structures where x 
