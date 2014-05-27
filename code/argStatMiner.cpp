@@ -47,11 +47,21 @@ void argStatMiner::getStatsForSite(set<int> chosenLabels, uint treeIndex, uint l
 
 void argStatMiner::getStatsDirection(set<int> chosenLabels, uint treeIndex, siteStat * stats, bool left) {
   uint DAC = chosenLabels.size();
+  set<int>::iterator sit;
   uint i, j; // loop indices
-  set<int>::iterator sit; // set iterator
   uint index = (left ? 0 : 1);
   int increment = (left ? -1 : 1);
 
-  for (i = treeIndex+increment; (left ? (i >= 0) : (i < localARG->treeList.size())) ; i+=increment) {
+  // Moving from this tree to the last one, keep track of how many recombinations etc, their lengths etc. 
+  vector<int> numRecomb = vectos<int>(DAC, 0);
+  uint recombIndex;
+  int recombShift = (left ? -1 : 0);
+  // Cases to conside 
+  // moving left - first tree encountered is your own - then you must check the recombList between your
+  // own and previous - if chosen line is part of the recombined set then you must adjust the stats 
+  // accordingly -
+  // moving right - first tree encountered is the next one
+  for (i = treeIndex+index; (left ? (i >= 0) : (i < localARG->treeList.size())) ; i+=increment) {
+    recombIndex = 
   }
 }

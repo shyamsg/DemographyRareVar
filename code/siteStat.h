@@ -8,15 +8,18 @@
    the information for that site. The infomation includes
    the length of the core haplotype, the length until the
    next recombination, the configuration (na, nb) of the
-   subtree that this line coalesced into. 
+   subtree that this line coalesced into. It also includes
+   if your first recombination is to core haplotype or not.
 
    Members of the class:
    ---------------------
    ### Attributes:###
    - lenCore
    - lenSecondRecomb
-   - leftConf
-   - rightConf
+   - numPop1
+   - numPop2
+   - numCore
+   - numNonCore
    - freq
 
    ### Methods:###
@@ -33,9 +36,12 @@
 class siteStat {
  public:
   int lenCore[2];
+  int lenFirstRecomb[2];
   int lenSecondRecomb[2];
-  int numPop1[2];
-  int numPop2[2];
+  int numPop1Core[2];
+  int numPop2Core[2];
+  int numPop1First[2];
+  int numPop2First[2];
   float frequency;
 
   /**
@@ -55,6 +61,11 @@ class siteStat {
      that the line of this site coalesced into.
   */
   float getPopProp(bool left);
+
+  /**
+     Is first recombination off core?
+  */
+  bool isFirstOffCore();
 
   /**
      Default destructor. Nothing to do.

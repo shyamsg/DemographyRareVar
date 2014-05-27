@@ -117,7 +117,7 @@ void ARG::populateRecombList() {
   //             \  / \  / \  / \  / \       \  /
   //              \/   \/   \/   \/   \       \/
   // recombList:  0    1    2    3    4       n-1
-  for (uint tindex = 0; tindex < (this->treeList.size() - 1); tindex++) {
+  for (unsigned int tindex = 0; tindex < (this->treeList.size() - 1); tindex++) {
     recombList.push_back(treeList[tindex]->getRecombined(treeList[tindex+1]));
   }
 }
@@ -151,9 +151,6 @@ void ARG::parseMACSOutput(const char * macsFileName){
   }
   macsfile.close();
   // populate the recombination list
-  //  ((((0:0.0256313,1:0.0256313):0.364469,5:0.390101):0.138984,2:0.529084):2.66886,(3:0.0110493,4:0.0110493):3.18689)
-  //  (((0:0.0256313,1:0.0256313):1.30595,(3:0.0110493,4:0.0110493):1.32053):1.86636,(2:0.529084,5:0.529084):2.66886)
-
   populateRecombList();
 
 #ifdef __DEBUG__
