@@ -65,6 +65,3 @@ void argStatMiner::getStatsDirection(set<int> chosenLabels, uint treeIndex, site
     curTree = localARG->treeList[i];
   }
 }
-
-void argStatMiner::extractRecombination(newickTreeNode * first, newickTreeNode * second) {
-}

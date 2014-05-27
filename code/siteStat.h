@@ -27,6 +27,9 @@
 
 */
 
+#ifndef __SITESTAT_H__
+#define __SITESTAT_H__
+
 class siteStat {
  public:
   int lenCore[2];
@@ -59,3 +62,5 @@ class siteStat {
   ~siteStat() {}
 
 };
+
+#endif

@@ -13,11 +13,16 @@
    ### Methods:###
    - siteFreq
    - siteCount
+   - getDerivedIndices
 
 */
 
+#ifndef __ARGHELPER_H__
+#define __ARGHELPER_H__
+
 #include <vector>
 #include <set>
+#include "newickTreeNode.h"
 
 using namespace std;
 
@@ -37,4 +42,7 @@ class argHelper {
      Gets the indices of samples that carry derived allele
   */
   set<int> getDerivedIndices(vector<bool> & polys);
+
 };
+
+#endif

@@ -20,6 +20,9 @@
 
 */
 
+#ifndef __ARGSTATMINER_H__
+#define __ARGSTATMINER_H__
+
 #include "siteStat.h"
 #include "argHelper.h"
 #include "ARG.h"
@@ -35,11 +38,6 @@ class argStatMiner {
      Get the statistics for this site going right/left from the core tree. 
   */
   void getStatsDirection(set<int> chosenLabels, uint treeIndex, siteStat * stats, bool left);
-
-  /**
-     Compare the lineage histories, returns true if recombination occurred.
-  */
-  bool isRecombined(const vector<pairstat> first, const vector<pairstat> second);
 
  public:
   vector<siteStat *> statVector; /**< Each site has x number of stat structures where x 
@@ -75,3 +73,5 @@ class argStatMiner {
   ~argStatMiner();
 
 };
+
+#endif

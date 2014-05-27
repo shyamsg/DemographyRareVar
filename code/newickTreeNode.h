@@ -21,15 +21,21 @@
    - leafList
    
    ### Methods:###
+   - leafDifference
    - constructors
    - switchChildren
    - isLeaf
    - isRoot
    - minLeafNode
    - findLeaf
+   - isCommonAncestor
    - findMRCANode
+   - getRecombined
    - destructor
 */
+
+#ifndef __NEWICKTREENODE_H__
+#define __NEWICKTREENODE_H__
 
 #include <set>
 #include <utility>
@@ -40,6 +46,14 @@ using namespace std;
 typedef pair<float, set<int> > pairstat;
 
 class newickTreeNode {  
+  
+  /**
+     Obtain the leaf difference based on whether the left trees
+     have fewer, more or different leaves. Used by the getRecombined
+     method.
+  */
+  set<int> leafSymmetricDifference(set<int> otherLeaves);
+
  public:
   newickTreeNode * leftSubTree; /**< Left sub-tree.*/
   newickTreeNode * rightSubTree; /**< Right sub-tree.*/
@@ -116,8 +130,13 @@ class newickTreeNode {
   newickTreeNode * findMRCANode(const set<int> givenNodes);
 
   /**
-     Return the lineage details of the current thing.
+     Get the set of recombined lines between this and the passed tree.
+     Assumes that there is at most one recombination event for now. Should
+     be easy to extend to multiple recombination events - here it looks
+     for exactly one set of lines which recombined. In the multiple case,
+     it is a union of all the sets. 
   */
-  vector<pairstat> getLineage(int leafNodeName);
-
+  set<int> getRecombined(newickTreeNode * other);
 };
+
+#endif

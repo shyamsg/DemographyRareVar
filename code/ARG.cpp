@@ -88,7 +88,7 @@ void ARG::getTree(string & line){
 	currentNode->leafList.insert(currentNode->rightSubTree->leafList.begin(), currentNode->rightSubTree->leafList.end());
 	if (currentNode->leftSubTree->minLeafNode() > currentNode->rightSubTree->minLeafNode()) {
 	  currentNode->switchNodes();
-	} 
+	}
 	countBracks--;
 	break;
       }
@@ -108,6 +108,20 @@ void ARG::getTree(string & line){
   }
   treeList.push_back(currentNode);
 }
+
+void ARG::populateRecombList() {
+  // Note: the recombList has 1 less entry than the treeList. 
+  // The first entry of recombList is the difference between 
+  // the first and second tree and so on.
+  // treeList:  0 -> 1 -> 2 -> 3 -> 4 ... n-1 -> n
+  //             \  / \  / \  / \  / \       \  /
+  //              \/   \/   \/   \/   \       \/
+  // recombList:  0    1    2    3    4       n-1
+  for (uint tindex = 0; tindex < (this->treeList.size() - 1); tindex++) {
+    recombList.push_back(treeList[tindex]->getRecombined(treeList[tindex+1]));
+  }
+}
+
 
 void ARG::parseMACSOutput(const char * macsFileName){
   ifstream macsfile(macsFileName);
@@ -135,19 +149,35 @@ void ARG::parseMACSOutput(const char * macsFileName){
   } else {
     cerr << "Unable to open file " << macsFileName << endl;
   }
-  cout << regionLength << endl;
+  macsfile.close();
+  // populate the recombination list
+  //  ((((0:0.0256313,1:0.0256313):0.364469,5:0.390101):0.138984,2:0.529084):2.66886,(3:0.0110493,4:0.0110493):3.18689)
+  //  (((0:0.0256313,1:0.0256313):1.30595,(3:0.0110493,4:0.0110493):1.32053):1.86636,(2:0.529084,5:0.529084):2.66886)
+
+  populateRecombList();
+
+#ifdef __DEBUG__
+  cout << "Region length: " << regionLength << endl;
+  cout << "Tree Sequence lengths: ";
   copy(treeSeqLengths.begin(), treeSeqLengths.end(), ostream_iterator<int>(cout, ",")); cout << endl;
+  cout << "Variant positions: ";
   copy(variantPos.begin(), variantPos.end(), ostream_iterator<int>(cout, ",")); cout << endl;
+  cout << "Polymorphic site states: " << endl;
   for (int i=0; i < polymorphisms.size(); i++) {
     copy(polymorphisms[i].begin(), polymorphisms[i].end(), ostream_iterator<bool>(cout, ""));
     cout << endl;
   }
+  cout << "Tree list: " << endl;
   for (int i=0; i < treeList.size(); i++) { 
     treeList[i]->printTree();
-    copy(treeList[i]->leafList.begin(), treeList[i]->leafList.end(), ostream_iterator<int>(cout, ","));
-    cout << endl;
   }
-  macsfile.close();
+  cout << "Recombination list: " << recombList.size() << endl;
+  for (int i=0; i < recombList.size(); i++) {
+    cout << "Start - ";
+    copy(recombList[i].begin(), recombList[i].end(), ostream_iterator<int>(cout, ","));
+    cout << " - End" << endl;
+  }
+#endif
 }
 
 ARG::~ARG() {
@@ -158,4 +188,5 @@ ARG::~ARG() {
   treeSeqLengths.clear();
   polymorphisms.clear();
   variantPos.clear();
+  recombList.clear();
 }

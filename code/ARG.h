@@ -13,6 +13,7 @@
    ### Attributes:###
    - treeVector
    - treeSeqLengths
+   - recombList
    - polymorphisms
    - variantPos
    - mutTimes
@@ -27,6 +28,9 @@
    
 */
 
+
+#ifndef __ARG_H__
+#define __ARG_H__
 
 #include "newickTreeNode.h"
 #include <vector>
@@ -58,9 +62,15 @@ class ARG {
    */
   vector<bool> makeBitVector(string token);
 
+  /**
+     Populate recombList by parsing across the list of trees in the ARG.
+  */
+  void populateRecombList();
+
  public:
   vector<newickTreeNode *> treeList; /**< List of trees that make up the ARG*/
   vector<int> treeSeqLengths; /**< Vector containing the lengths of the sequences for each tree*/
+  vector<set<int> > recombList; /**< List of lines that recombined from tree t to t+1*/
   vector<vector<bool> > polymorphisms; /**< Matrix of polymorphisms - stored as 0/1 */
   vector<int> variantPos; /**< Position of SNPs */
   vector<float> mutTimes; /**< Times of mutations, in 2N generation units */
@@ -82,3 +92,5 @@ class ARG {
   */
   ~ARG();  
 };
+
+#endif

@@ -11,7 +11,7 @@ else
 	LIBS=-I /home/shyamg/packages/tclap-1.2.1/include/
 endif
 
-CXXFLAGS=-std=c++11
+CXXFLAGS=-std=c++11 -g -D__DEBUG__
 LDFLAGS=-O3
 
 all:	tester

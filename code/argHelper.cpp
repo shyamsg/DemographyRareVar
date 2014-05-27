@@ -24,3 +24,4 @@ set<int> argHelper::getDerivedIndices(vector<bool> & polys) {
   }
   return chosen;
 }
+

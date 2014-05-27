@@ -1,6 +1,7 @@
 #include "newickTreeNode.h"
 #include <algorithm>
 #include <iostream>
+#include <iterator>
 
 newickTreeNode::newickTreeNode() {
   // Set all the pointers to NULL
@@ -75,6 +76,97 @@ bool newickTreeNode::operator== (const newickTreeNode & other) const {
   return true;
 }
 
+set<int> newickTreeNode::leafSymmetricDifference(set<int> otherLeaves) {
+  set<int> leafDiff;
+  set<int>::iterator sit;
+  set<int>::iterator sit2;
+  for (sit = this->leafList.begin(); sit != this->leafList.end(); sit++) {
+    sit2 = otherLeaves.find(*sit);
+    if ( sit2 == otherLeaves.end()) {
+      leafDiff.insert(*sit);
+    } else {
+      otherLeaves.erase(sit2);
+    }
+  }
+  for (sit = otherLeaves.begin(); sit != otherLeaves.end(); sit++) {
+    if (this->leafList.find(*sit) == this->leafList.end()) {
+      leafDiff.insert(*sit);
+    }
+  }
+  return leafDiff;
+}
+
+set<int> newickTreeNode::getRecombined (newickTreeNode * other) {
+  // Find the lines that recombined from this tree to the next
+  // Assumes that there is only one recombination for now.
+  // Go left and extract that left subtree's recombination, if that is 
+  // empty, the go right and extract that tree's recombination. If both are 
+  // empty, then something is wrong and the trees are the same -> not possible
+  // since exactly one recombination between the neighboring trees :)
+
+  set<int> temp; // return variable with labels of the recombined nodes.
+  // At root or an internal node in both trees
+  if (this->leftSubTree != NULL && this->rightSubTree != NULL &&
+    other->leftSubTree != NULL && other->rightSubTree != NULL) {
+    // nodes have switched from left to right subtree or vice versa
+    if (this->leftSubTree->leafList != other->leftSubTree->leafList) {
+      // compute the difference in the leaf list and this is the set of lines
+      // that has recombined
+      unsigned int sizediff = (unsigned int) abs((int) this->leftSubTree->leafList.size() - 
+						 (int) other->leftSubTree->leafList.size());
+      // If the subtree containing 0 label switches from left to right then the root of this
+      // tree is going to get rearranged - switch of left and right nodes - check for that 
+      temp = this->leftSubTree->leafSymmetricDifference(other->leftSubTree->leafList);
+      if (temp.size() != sizediff) {
+	cout << "Here is the thing" << endl;
+	temp = this->leftSubTree->leafSymmetricDifference(other->rightSubTree->leafList);
+      }
+      return temp;
+    }
+    // the length of the left subtree branches are different - leaf lists
+    // are not, so invisible recombination, assign the subtree as recombined
+    // proportional to its branch length
+    if (this->leftSubTree->branchLen != other->leftSubTree->branchLen) {
+      if (isRoot()) { // the root moved back
+	float leftProp = this->leftSubTree->branchLen;
+	leftProp = leftProp/(leftProp+this->rightSubTree->branchLen);
+	if (drand48() < leftProp)
+	  temp = this->leftSubTree->leafList;
+	else
+	  temp = this->rightSubTree->leafList;
+      } else {
+	float leftProp = this->leftSubTree->leftSubTree->branchLen;
+	leftProp = leftProp/(leftProp+this->leftSubTree->rightSubTree->branchLen);
+	if (drand48() < leftProp)
+	  temp = this->leftSubTree->leftSubTree->leafList;
+	else
+	  temp = this->leftSubTree->rightSubTree->leafList;
+      }
+      return temp;
+    }
+    // the length of the right subtree branches are different - leaf lists
+    // are not, so invisible recombination, assign the subtree as recombined
+    // proportional to its branch length
+    if (this->rightSubTree->branchLen != other->rightSubTree->branchLen) {
+      float leftProp = this->rightSubTree->leftSubTree->branchLen;
+      leftProp = leftProp/(leftProp+this->rightSubTree->rightSubTree->branchLen);
+      if (drand48() < leftProp)
+	temp = this->rightSubTree->leftSubTree->leafList;
+      else
+	temp = this->rightSubTree->rightSubTree->leafList;
+      return temp;      
+    }
+    // This is not the tree minimal tree of recombination - look at the left and right 
+    // children one by one. Left first, then right.
+    temp = this->leftSubTree->getRecombined(other->leftSubTree);
+    if (!temp.empty()) return temp;
+    temp = this->rightSubTree->getRecombined(other->rightSubTree);
+    if (!temp.empty()) return temp;
+  } 
+  // This is a leaf node in at least one of the trees - return an empty set
+  return temp;
+}
+
 newickTreeNode * newickTreeNode::findLeaf(int leafNodeName) {
     if (this->isLeaf()) {
       if (this->minLeafNode() == leafNodeName)
@@ -138,6 +230,10 @@ newickTreeNode * newickTreeNode::findMRCANode(const set<int> givenNodes) {
     return this;
 }
 
+
+// Obsolete function to get the lineage of a leaf node - path of 
+// internal nodes and times till you reach root.
+/*
 vector<pairstat> newickTreeNode::getLineage(int leafNodeName) {
   vector<pairstat> lineage;
   newickTreeNode * leafNode = findLeaf(leafNodeName);
@@ -152,3 +248,4 @@ vector<pairstat> newickTreeNode::getLineage(int leafNodeName) {
   }
   return lineage;
 }
+*/
