@@ -137,6 +137,13 @@ class newickTreeNode {
      it is a union of all the sets. 
   */
   set<int> getRecombined(newickTreeNode * other);
+  
+  /**
+     Get the subtree to which this set of leaves recombined to. The implicit 
+     assumption is that the set of leaves here forms a complete subtree => 
+     the MRCA node of these leaves has exactly these leaves in its leaf list. 
+  */
+  set<int> getRecombinedTo(const set<int> leaves);
 };
 
 #endif

@@ -14,6 +14,7 @@
    Members of the class:
    ---------------------
    ### Attributes:###
+   - fromPop1
    - lenCore
    - lenSecondRecomb
    - numPop1
@@ -35,13 +36,14 @@
 
 class siteStat {
  public:
-  int lenCore[2];
-  int lenFirstRecomb[2];
-  int lenSecondRecomb[2];
-  int numPop1Core[2];
-  int numPop2Core[2];
-  int numPop1First[2];
-  int numPop2First[2];
+  bool fromPop1; /**<Is the line sampled from population 1?*/
+  int lenCore[2]; /**<Length of the core haplotype going left and right.*/
+  int lenFirstRecomb[2]; /**<Length of segment from site to first recombination.*/
+  int lenSecondRecomb[2]; /**<Length of segment from first to second recombination.*/
+  int numPop1Core[2]; /**<When switching off core haplotype, count of pop1 in recombined-to subtree.*/
+  int numPop2Core[2]; /**<When switching off core haplotype, count of pop2 in recombined-to subtree.*/
+  int numPop1First[2]; /**<At first recombination, count of pop1 in recombined-to subtree.*/
+  int numPop2First[2]; /**<At first recombination, count of pop2 in recombined-to subtree.*/
   float frequency;
 
   /**

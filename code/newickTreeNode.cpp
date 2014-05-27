@@ -167,6 +167,19 @@ set<int> newickTreeNode::getRecombined (newickTreeNode * other) {
   return temp;
 }
 
+set<int> getRecombinedTo(const set<int> leaves) {
+  // Find the MRCA node of these leaves
+  newickTreeNode * temp = this->findMRCA(leaves);
+  if (temp->isRoot()) {
+    cerr << "These leaves have root as their MRCA. Are you sure that is correct?" << endl;
+    exit(3);
+  }
+  // return sister subtree's leaf list
+  if (temp == temp->parent->leftSubTree)
+    return temp->parent->rightSubTree->leafList;
+  return temp->parent->leftSubTree->leafList;
+}
+
 newickTreeNode * newickTreeNode::findLeaf(int leafNodeName) {
     if (this->isLeaf()) {
       if (this->minLeafNode() == leafNodeName)
