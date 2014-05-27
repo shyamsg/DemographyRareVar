@@ -52,16 +52,6 @@ void argStatMiner::getStatsDirection(set<int> chosenLabels, uint treeIndex, site
   uint index = (left ? 0 : 1);
   int increment = (left ? -1 : 1);
 
-  // Each sample that carries the derived allele will have a vector of these pairstats -
-  // tracing their lineage back to root.
-  newickTreeNode * curTree = localARG->treeList[treeIndex];
-
-  // For each of the lineages that need to be looked at, keep track of the 
-  vector<int> nrecomb = vector<int>(DAC, 0);
-  // Go from current tree + 1 to the last or till all the stats are collected.
   for (i = treeIndex+increment; (left ? (i >= 0) : (i < localARG->treeList.size())) ; i+=increment) {
-    // For the current tree, find the lineages and process to see if the current 
-    // lineage went through a recombination. If it did measure the appropriate stats 
-    curTree = localARG->treeList[i];
   }
 }

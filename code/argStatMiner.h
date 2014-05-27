@@ -39,6 +39,13 @@ class argStatMiner {
   */
   void getStatsDirection(set<int> chosenLabels, uint treeIndex, siteStat * stats, bool left);
 
+  /**
+     This function obtains the stats such as core haplotype length, the length
+     of second recombination and the counts of coalescing subtree for the lines
+     with derived states at a given site. 
+  */
+  void getStatsForSite(set<int> chosenLabels, uint treeIndex, uint leftOnTree, uint rightOnTree);
+  
  public:
   vector<siteStat *> statVector; /**< Each site has x number of stat structures where x 
 				    is number of derived alleles.*/
@@ -60,13 +67,6 @@ class argStatMiner {
   */
   void getStatsByDAC(int maxDerivedCount);
 
-  /**
-     This function obtains the stats such as core haplotype length, the length
-     of second recombination and the counts of coalescing subtree for the lines
-     with derived states at a given site. 
-  */
-  void getStatsForSite(set<int> chosenLabels, uint treeIndex, uint leftOnTree, uint rightOnTree);
-  
   /**
      Destructor. Empty the stats matrix. 
   */
