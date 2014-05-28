@@ -39,6 +39,7 @@ void argStatMiner::getStatsForSite(set<int> chosenLabels, uint treeIndex, uint l
     stats[i].frequency = DAC;
     stats[i].lenCore[0] = leftOnTree;
     stats[i].lenCore[1] = rightOnTree;
+    stats[i].lenFirstRecomb[0] = stats[i].lenFirstRecomb[1] = 0;
     stats[i].lenSecondRecomb[0] = stats[i].lenSecondRecomb[1] = 0;
   }
   getStatsDirection(chosenLabels, treeIndex, stats, true);
@@ -49,19 +50,105 @@ void argStatMiner::getStatsDirection(set<int> chosenLabels, uint treeIndex, site
   uint DAC = chosenLabels.size();
   set<int>::iterator sit;
   uint i, j; // loop indices
-  uint index = (left ? 0 : 1);
-  int increment = (left ? -1 : 1);
+  int pop1Size = localARG->pop1Size;
 
   // Moving from this tree to the last one, keep track of how many recombinations etc, their lengths etc. 
-  vector<int> numRecomb = vectos<int>(DAC, 0);
-  uint recombIndex;
-  int recombShift = (left ? -1 : 0);
-  // Cases to conside 
+  vector<int> numRecomb = vector<int>(DAC, 0);
+  vector<bool> onCore = vector<bool>(DAC, true);
+  set<int> stillOnCore = chosenLabels;
+  // Cases to consider 
   // moving left - first tree encountered is your own - then you must check the recombList between your
   // own and previous - if chosen line is part of the recombined set then you must adjust the stats 
   // accordingly -
-  // moving right - first tree encountered is the next one
-  for (i = treeIndex+index; (left ? (i >= 0) : (i < localARG->treeList.size())) ; i+=increment) {
-    recombIndex = 
+  if (left) {
+    for (i = treeIndex - 1; i >= 0 ; i--) {
+      set<int> recombed = localARG->recombList[i];
+      j = 0;
+      int pop1ontree = pop1OnTree(localARG->recombedFrom[i], pop1Size);
+      int pop2ontree = localARG->recombedFrom[i].size() - pop1ontree;
+      bool offcore = isOffCore(localARG->recombedFrom[i], stillOnCore);
+      for (sit = chosenLabels.begin(); sit != chosenLabels.end(); sit++; j++) {
+	if (!onCore[j] && numRecomb[j] > 1) continue; // already measured upto 2 recombs and offCore
+	if (recombed.find(*sit) != recombed.end()) { // this line recombined off
+	  // set the count variables correctly
+	  if (numRecomb[j] == 0) { //firstRecomb
+	    numPop1First[0] = pop1ontree;
+	    numPop2First[0] = pop2ontree;
+	  }
+	  if (offcore && oncore[j]) { //off core now
+	    numPop1Core[0] = pop1ontree;
+	    numPop2Core[0] = pop2ontree;
+	    stillOnCore.erase(*sit);
+	  }
+	  numRecomb[j]++;
+	  oncore[j] = false;
+	}
+	// Increment the lengths - according to which one you are measuring.
+	if (onCore[j])
+	  stats[j].lenCore[0] += localARG->treeSeqLengths[i]; 
+	switch(numRecomb[j]) {
+	case 0:
+	  stats[j].lenFirstRecomb[0]+= localARG->treeSeqLengths[i];
+	  break;
+	case 1:
+	  stats[j].lenSecondRecomb[0] += localARG->treeSeqLengths[i];
+	  break;
+	default: break;
+	}
+      }
+    }
+  } else { // moving right - first tree encountered is the next one so keep going to the end. 
+    for (i = treeIndex; i < (localARG->treeList.size() - 1) ; i++) {
+      set<int> recombed = localARG->recombList[i];
+      j = 0;
+      int pop1ontree = pop1OnTree(localARG->recombedTo[i], pop1Size);
+      int pop2ontree = localARG->recombedTo[i].size() - pop1ontree;
+      bool offcore = isOffCore(localARG->recombedTo[i], stillOnCore);
+      for (sit = chosenLabels.begin(); sit != chosenLabels.end(); sit++; j++) {
+	if (!onCore[j] && numRecomb[j] > 1) continue; // already measured upto 2 recombs and offCore
+	if (recombed.find(*sit) != recombed.end()) { // this line recombined off
+	  // set the count variables correctly
+	  if (numRecomb[j] == 0) { //firstRecomb
+	    numPop1First[1] = pop1ontree;
+	    numPop2First[1] = pop2ontree;
+	  }
+	  if (offcore && oncore[j]) { //off core now
+	    numPop1Core[1] = pop1ontree;
+	    numPop2Core[1] = pop2ontree;
+	    stillOnCore.erase(*sit);
+	  }
+	  numRecomb[j]++;
+	  oncore[j] = false;
+	}
+	// Increment the lengths - according to which one you are measuring.
+	if (onCore[j])
+	  stats[j].lenCore[1] += localARG->treeSeqLengths[i+1]; 
+	switch(numRecomb[j]) {
+	case 0:
+	  stats[j].lenFirstRecomb[1]+= localARG->treeSeqLengths[i+1];
+	  break;
+	case 1:
+	  stats[j].lenSecondRecomb[1] += localARG->treeSeqLengths[i+1];
+	  break;
+	default: break;
+	}
+      }
+    }
   }
+}
+
+int argStatMiner::pop1OnTree(set<int> leaves, int pivot) {
+  int result = 0;
+  for (set<int>::iterator sit = leaves.begin(); sit != leaves.end(); sit++) {
+    if (*sit < pivot) result++;
+  }
+  return result;
+}
+
+bool argStatMiner::isOffCore(set<int> leaves, set<int> core) {
+  for (set<int>::iterator sit = leaves.begin(); sit != leaves.end(); sit++) {
+    if (core.find(*sit) == core.end()) // cannot find one of the leaves
+      return true;
+  }
+  return false;
 }

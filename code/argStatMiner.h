@@ -45,7 +45,17 @@ class argStatMiner {
      with derived states at a given site. 
   */
   void getStatsForSite(set<int> chosenLabels, uint treeIndex, uint leftOnTree, uint rightOnTree);
-  
+
+  /**
+    Get population counts on tree
+  */
+  int pop1OnTree(set<int> leaves, int pivot);
+
+  /**
+     Is the recombination taking the lineages off core?
+   */
+  bool isOffCore(set<int> leaves, set<int> core);
+
  public:
   vector<siteStat *> statVector; /**< Each site has x number of stat structures where x 
 				    is number of derived alleles.*/

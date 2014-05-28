@@ -60,9 +60,10 @@ class siteStat {
 
   /**
      Returns the proportion of population 1 vs 2 samples in the subtree
-     that the line of this site coalesced into.
+     that the line of this site coalesced into, when switching off the core
+     haplotype
   */
-  float getPopProp(bool left);
+  float getPopPropCore(bool left);
 
   /**
      Is first recombination off core?

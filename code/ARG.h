@@ -71,10 +71,13 @@ class ARG {
   vector<newickTreeNode *> treeList; /**< List of trees that make up the ARG*/
   vector<int> treeSeqLengths; /**< Vector containing the lengths of the sequences for each tree*/
   vector<set<int> > recombList; /**< List of lines that recombined from tree t to t+1*/
+  vector<set<int> > recombedToList; /**< List of lines that were recombined onto*/
+  vector<set<int> > recombedFromList; /**< List of lines that were recombined from*/
   vector<vector<bool> > polymorphisms; /**< Matrix of polymorphisms - stored as 0/1 */
   vector<int> variantPos; /**< Position of SNPs */
   vector<float> mutTimes; /**< Times of mutations, in 2N generation units */
   int regionLength; /**< Length of simulated region */
+  int pop1Size; /**< Number of samples in population 1 */
 
   /**
      Constructor - does nothing :) 

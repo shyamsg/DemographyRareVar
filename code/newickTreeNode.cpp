@@ -38,14 +38,15 @@ bool newickTreeNode::isLeaf() {
 }
 
 void newickTreeNode::switchNodes() {
-  //  cout << branchLen << "{" << minLeafNode() << "}" << endl;
+  //Test to see if it has right child
   if (rightSubTree == NULL) return;
+  // if no left child and right child present, then switch them
   if (leftSubTree == NULL) {
     leftSubTree = rightSubTree;
     rightSubTree = NULL;
     return;
   }
-  //  cout << " ---- " << leftSubTree->minLeafNode() << " - " << rightSubTree->minLeafNode() << " ---- " << endl;
+  // if left's min leaf is less than right's min leaf switch them.
   if (leftSubTree->minLeafNode() > rightSubTree->minLeafNode()) {
     newickTreeNode * temp = leftSubTree;
     leftSubTree = rightSubTree;
@@ -167,9 +168,9 @@ set<int> newickTreeNode::getRecombined (newickTreeNode * other) {
   return temp;
 }
 
-set<int> getRecombinedTo(const set<int> leaves) {
+set<int> newickTreeNode::getRecombinedAdjoint(const set<int> leaves) {
   // Find the MRCA node of these leaves
-  newickTreeNode * temp = this->findMRCA(leaves);
+  newickTreeNode * temp = this->findMRCANode(leaves);
   if (temp->isRoot()) {
     cerr << "These leaves have root as their MRCA. Are you sure that is correct?" << endl;
     exit(3);

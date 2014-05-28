@@ -31,6 +31,7 @@
    - isCommonAncestor
    - findMRCANode
    - getRecombined
+   - getRecombinedAdjoint
    - destructor
 */
 
@@ -139,11 +140,15 @@ class newickTreeNode {
   set<int> getRecombined(newickTreeNode * other);
   
   /**
-     Get the subtree to which this set of leaves recombined to. The implicit 
+     Get the subtree to which this set of leaves recombined with. The implicit 
      assumption is that the set of leaves here forms a complete subtree => 
      the MRCA node of these leaves has exactly these leaves in its leaf list. 
+     In a donor tree, the leaves are the subtree that these leaves recombined 
+     from. In a receiver tree, these are the leaves of the subtree that were 
+     recombined onto. 
   */
-  set<int> getRecombinedTo(const set<int> leaves);
+  set<int> getRecombinedAdjoint(const set<int> leaves);
+
 };
 
 #endif

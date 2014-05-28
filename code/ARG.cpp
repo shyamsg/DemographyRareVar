@@ -116,9 +116,13 @@ void ARG::populateRecombList() {
   // treeList:  0 -> 1 -> 2 -> 3 -> 4 ... n-1 -> n
   //             \  / \  / \  / \  / \       \  /
   //              \/   \/   \/   \/   \       \/
-  // recombList:  0    1    2    3    4       n-1
+  // recombList:   0    1    2    3    4       n-1
+  // recombedTo:   0    1    2    3    4       n-1
+  // recombedFrom: 0    1    2    3    4       n-1
   for (unsigned int tindex = 0; tindex < (this->treeList.size() - 1); tindex++) {
     recombList.push_back(treeList[tindex]->getRecombined(treeList[tindex+1]));
+    recombedToList.push_back(treeList[tindex+1]->getRecombinedAdjoint(recombList.last()));
+    recombedFromList.push_back(treeList[tindex]->getRecombinedAdjoint(recombList.last()));
   }
 }
 
