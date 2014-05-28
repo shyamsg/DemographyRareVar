@@ -8,6 +8,7 @@
 #include <tclap/CmdLine.h>
 #include <ctime>
 #include "ARG.h"
+#include "argStatMiner.h"
 
 int main(int argc, char * argv[])
 {
@@ -15,5 +16,6 @@ int main(int argc, char * argv[])
   srand48(seed);
   ARG myArg;
   myArg.parseMACSOutput(argv[1]);
-  
+
+  argStatMiner myMiner(&myArg);
 }

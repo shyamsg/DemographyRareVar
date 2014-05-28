@@ -34,6 +34,10 @@
 #ifndef __SITESTAT_H__
 #define __SITESTAT_H__
 
+#include <utility>
+
+using namespace std;
+
 class siteStat {
  public:
   bool fromPop1; /**<Is the line sampled from population 1?*/
@@ -68,7 +72,7 @@ class siteStat {
   /**
      Is first recombination off core?
   */
-  bool isFirstOffCore();
+  pair<bool, bool> isFirstOffCore();
 
   /**
      Default destructor. Nothing to do.

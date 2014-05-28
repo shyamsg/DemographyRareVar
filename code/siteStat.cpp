@@ -22,10 +22,10 @@ float siteStat::getPopPropCore(bool left=true) {
 
 pair<bool, bool> siteStat::isFirstOffCore() {
   pair<bool, bool> temp;
-  if (lenCore[0] == lenFirst[0])
+  if (lenCore[0] == lenFirstRecomb[0])
     temp.first = true;
   else temp.first = false;
-  if (lenCore[1] == lenFirst[1])
+  if (lenCore[1] == lenFirstRecomb[1])
     temp.second = true;
   else temp.second = false;
   return temp;

@@ -64,24 +64,24 @@ void argStatMiner::getStatsDirection(set<int> chosenLabels, uint treeIndex, site
     for (i = treeIndex - 1; i >= 0 ; i--) {
       set<int> recombed = localARG->recombList[i];
       j = 0;
-      int pop1ontree = pop1OnTree(localARG->recombedFrom[i], pop1Size);
-      int pop2ontree = localARG->recombedFrom[i].size() - pop1ontree;
-      bool offcore = isOffCore(localARG->recombedFrom[i], stillOnCore);
-      for (sit = chosenLabels.begin(); sit != chosenLabels.end(); sit++; j++) {
+      int pop1ontree = pop1OnTree(localARG->recombedFromList[i], pop1Size);
+      int pop2ontree = localARG->recombedFromList[i].size() - pop1ontree;
+      bool offcore = isOffCore(localARG->recombedFromList[i], stillOnCore);
+      for (sit = chosenLabels.begin(); sit != chosenLabels.end(); sit++, j++) {
 	if (!onCore[j] && numRecomb[j] > 1) continue; // already measured upto 2 recombs and offCore
 	if (recombed.find(*sit) != recombed.end()) { // this line recombined off
 	  // set the count variables correctly
 	  if (numRecomb[j] == 0) { //firstRecomb
-	    numPop1First[0] = pop1ontree;
-	    numPop2First[0] = pop2ontree;
+	    stats[j].numPop1First[0] = pop1ontree;
+	    stats[j].numPop2First[0] = pop2ontree;
 	  }
-	  if (offcore && oncore[j]) { //off core now
-	    numPop1Core[0] = pop1ontree;
-	    numPop2Core[0] = pop2ontree;
+	  if (offcore && onCore[j]) { //off core now
+	    stats[j].numPop1Core[0] = pop1ontree;
+	    stats[j].numPop2Core[0] = pop2ontree;
 	    stillOnCore.erase(*sit);
 	  }
 	  numRecomb[j]++;
-	  oncore[j] = false;
+	  onCore[j] = false;
 	}
 	// Increment the lengths - according to which one you are measuring.
 	if (onCore[j])
@@ -101,24 +101,24 @@ void argStatMiner::getStatsDirection(set<int> chosenLabels, uint treeIndex, site
     for (i = treeIndex; i < (localARG->treeList.size() - 1) ; i++) {
       set<int> recombed = localARG->recombList[i];
       j = 0;
-      int pop1ontree = pop1OnTree(localARG->recombedTo[i], pop1Size);
-      int pop2ontree = localARG->recombedTo[i].size() - pop1ontree;
-      bool offcore = isOffCore(localARG->recombedTo[i], stillOnCore);
-      for (sit = chosenLabels.begin(); sit != chosenLabels.end(); sit++; j++) {
+      int pop1ontree = pop1OnTree(localARG->recombedToList[i], pop1Size);
+      int pop2ontree = localARG->recombedToList[i].size() - pop1ontree;
+      bool offcore = isOffCore(localARG->recombedToList[i], stillOnCore);
+      for (sit = chosenLabels.begin(); sit != chosenLabels.end(); sit++, j++) {
 	if (!onCore[j] && numRecomb[j] > 1) continue; // already measured upto 2 recombs and offCore
 	if (recombed.find(*sit) != recombed.end()) { // this line recombined off
 	  // set the count variables correctly
 	  if (numRecomb[j] == 0) { //firstRecomb
-	    numPop1First[1] = pop1ontree;
-	    numPop2First[1] = pop2ontree;
+	    stats[j].numPop1First[1] = pop1ontree;
+	    stats[j].numPop2First[1] = pop2ontree;
 	  }
-	  if (offcore && oncore[j]) { //off core now
-	    numPop1Core[1] = pop1ontree;
-	    numPop2Core[1] = pop2ontree;
+	  if (offcore && onCore[j]) { //off core now
+	    stats[j].numPop1Core[1] = pop1ontree;
+	    stats[j].numPop2Core[1] = pop2ontree;
 	    stillOnCore.erase(*sit);
 	  }
 	  numRecomb[j]++;
-	  oncore[j] = false;
+	  onCore[j] = false;
 	}
 	// Increment the lengths - according to which one you are measuring.
 	if (onCore[j])
@@ -151,4 +151,9 @@ bool argStatMiner::isOffCore(set<int> leaves, set<int> core) {
       return true;
   }
   return false;
+}
+
+argStatMiner::~argStatMiner(){
+  // Should delete all the different stat vectors
+  for (vector<siteStat *>::iterator vit = 
 }
