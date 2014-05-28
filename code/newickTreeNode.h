@@ -19,6 +19,7 @@
    - rightSubTree
    - parent
    - leafList
+   - branchLen
    
    ### Methods:###
    - leafDifference

@@ -30,7 +30,7 @@ newickTreeNode::~newickTreeNode() {
 }
 
 bool newickTreeNode::isRoot() {
-  return (parent == NULL);
+  return (this->parent == NULL);
 }
 
 bool newickTreeNode::isLeaf() {
@@ -170,6 +170,10 @@ set<int> newickTreeNode::getRecombined (newickTreeNode * other) {
 
 set<int> newickTreeNode::getRecombinedAdjoint(const set<int> leaves) {
   // Find the MRCA node of these leaves
+  if (leaves.empty()) {
+    set<int> emptyset;
+    return emptyset;
+  }
   newickTreeNode * temp = this->findMRCANode(leaves);
   if (temp->isRoot()) {
     cerr << "These leaves have root as their MRCA. Are you sure that is correct?" << endl;
@@ -226,6 +230,7 @@ void newickTreeNode::printTree() {
 
 bool newickTreeNode::isCommonAncestor(const set<int> givenNodes) {
   for (set<int>::iterator iit = givenNodes.begin(); iit != givenNodes.end(); iit++) {
+    cout << *iit << endl;
     if (leafList.find(*iit) == leafList.end())
       return false;
   }

@@ -126,7 +126,6 @@ void ARG::populateRecombList() {
   }
 }
 
-
 void ARG::parseMACSOutput(const char * macsFileName){
   ifstream macsfile(macsFileName);
   string line;

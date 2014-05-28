@@ -16,7 +16,6 @@ int main(int argc, char * argv[])
   srand48(seed);
   ARG myArg;
   myArg.parseMACSOutput(argv[1]);
-  myArg.pop1Size = 1000;
   int maxDAC = atoi(argv[2]);
   argStatMiner myMiner(&myArg);
   for(int count=0; count < maxDAC; count++)
