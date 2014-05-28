@@ -44,6 +44,7 @@ void argStatMiner::getStatsForSite(set<int> chosenLabels, uint treeIndex, uint l
   }
   getStatsDirection(chosenLabels, treeIndex, stats, true);
   getStatsDirection(chosenLabels, treeIndex, stats, false);
+  statVector.push_back(stats);
 }
 
 void argStatMiner::getStatsDirection(set<int> chosenLabels, uint treeIndex, siteStat * stats, bool left) {
@@ -155,5 +156,8 @@ bool argStatMiner::isOffCore(set<int> leaves, set<int> core) {
 
 argStatMiner::~argStatMiner(){
   // Should delete all the different stat vectors
-  for (vector<siteStat *>::iterator vit = 
+  for (vector<siteStat *>::iterator vit = statVector.begin(); vit < statVector.end(); vit++) {
+    if (*vit != NULL) 
+      delete *vit;
+  }
 }

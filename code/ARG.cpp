@@ -144,7 +144,9 @@ void ARG::parseMACSOutput(const char * macsFileName){
 	  getVariants(line);
 	} else {
 	  if (firstToken == "COMMAND") {
-	    tit++; tit++;
+	    tit++;
+	    pop1Size = int(stoi(*tit)/2); // assumes equal sample sizes in both populations
+	    tit++;
 	    regionLength = stoi(*tit);
 	  }
 	}
