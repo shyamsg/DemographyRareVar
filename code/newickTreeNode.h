@@ -33,6 +33,7 @@
    - findMRCANode
    - getRecombined
    - getRecombinedAdjoint
+   - getTotalTime
    - destructor
 */
 
@@ -130,6 +131,11 @@ class newickTreeNode {
      Finds the node which is the MRCA of the given set of nodes.
   */
   newickTreeNode * findMRCANode(const set<int> givenNodes);
+
+  /**
+     Get the total time form this node to the leaves (present).
+  */
+  float getTotalTime();
 
   /**
      Get the set of recombined lines between this and the passed tree.

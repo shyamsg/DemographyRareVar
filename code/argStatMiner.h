@@ -37,7 +37,7 @@ class argStatMiner {
   /**
      Get the statistics for this site going right/left from the core tree. 
   */
-  void getStatsDirection(set<int> chosenLabels, uint treeIndex, siteStat * stats, bool left);
+  void getStatsDirection(set<int> chosenLabels, uint treeIndex, vector<siteStat> & stats, bool left);
 
   /**
      This function obtains the stats such as core haplotype length, the length
@@ -54,10 +54,10 @@ class argStatMiner {
   /**
      Is the recombination taking the lineages off core?
    */
-  bool isOffCore(set<int> leaves, set<int> core);
+  bool isOffCore(set<int> leaves, set<int> core, float recombTime, float mutTime);
 
  public:
-  vector<siteStat *> statVector; /**< Each site has x number of stat structures where x 
+  vector<vector<siteStat> > statVector; /**< Each site has x number of stat structures where x 
 				    is number of derived alleles.*/
   
   /**
@@ -76,6 +76,11 @@ class argStatMiner {
      sure that these sites get stored under the appropriate DAC. 
   */
   void getStatsByDAC(int maxDerivedCount);
+
+  /**
+     Print the statistics computed from the ARG to a file.
+  */
+  void printStats(ofstream & output);
 
   /**
      Destructor. Empty the stats matrix. 

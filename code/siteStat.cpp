@@ -1,4 +1,5 @@
 #include "siteStat.h"
+#include <iostream>
 
 siteStat::siteStat() {
   fromPop1 = true;
@@ -31,3 +32,14 @@ pair<bool, bool> siteStat::isFirstOffCore() {
   return temp;
 }
 
+void siteStat::print(ofstream & output) {
+  output << (int)fromPop1+1 << "\t";
+  output << frequency << "\t";
+  output << lenCore[0] << "\t" << lenCore[1] << "\t";
+  output << lenFirstRecomb[0] << "\t" << lenFirstRecomb[1] << "\t";
+  output << lenSecondRecomb[0] << "\t" << lenSecondRecomb[1] << "\t";
+  output << numPop1Core[0] << "\t" << numPop1Core[1] << "\t";
+  output << numPop2Core[0] << "\t" << numPop2Core[1] << "\t";
+  output << numPop1First[0] << "\t" << numPop1First[1] << "\t";
+  output << numPop2First[0] << "\t" << numPop2First[1] << endl;
+}

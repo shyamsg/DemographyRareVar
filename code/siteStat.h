@@ -35,6 +35,7 @@
 #define __SITESTAT_H__
 
 #include <utility>
+#include <fstream>
 
 using namespace std;
 
@@ -73,6 +74,11 @@ class siteStat {
      Is first recombination off core?
   */
   pair<bool, bool> isFirstOffCore();
+
+  /**
+     Print the site statistics.
+  */
+  void print(ofstream & output);
 
   /**
      Default destructor. Nothing to do.

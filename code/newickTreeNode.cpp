@@ -119,7 +119,6 @@ set<int> newickTreeNode::getRecombined (newickTreeNode * other) {
       // tree is going to get rearranged - switch of left and right nodes - check for that 
       temp = this->leftSubTree->leafSymmetricDifference(other->leftSubTree->leafList);
       if (temp.size() != sizediff) {
-	cout << "Here is the thing" << endl;
 	temp = this->leftSubTree->leafSymmetricDifference(other->rightSubTree->leafList);
       }
       return temp;
@@ -135,6 +134,7 @@ set<int> newickTreeNode::getRecombined (newickTreeNode * other) {
 	  temp = this->leftSubTree->leafList;
 	else
 	  temp = this->rightSubTree->leafList;
+	temp = this->rightSubTree->leafList;
       } else {
 	float leftProp = this->leftSubTree->leftSubTree->branchLen;
 	leftProp = leftProp/(leftProp+this->leftSubTree->rightSubTree->branchLen);
@@ -142,6 +142,7 @@ set<int> newickTreeNode::getRecombined (newickTreeNode * other) {
 	  temp = this->leftSubTree->leftSubTree->leafList;
 	else
 	  temp = this->leftSubTree->rightSubTree->leafList;
+	temp = this->rightSubTree->leafList;
       }
       return temp;
     }
@@ -229,8 +230,10 @@ void newickTreeNode::printTree() {
 }
 
 bool newickTreeNode::isCommonAncestor(const set<int> givenNodes) {
+  //  cout << "Given: "; copy(givenNodes.begin(), givenNodes.end(), ostream_iterator<int>(cout, " ")); cout << endl;
+  //  cout << "Leaflist: "; copy(leafList.begin(), leafList.end(), ostream_iterator<int>(cout, " ")); cout << endl;
   for (set<int>::iterator iit = givenNodes.begin(); iit != givenNodes.end(); iit++) {
-    cout << *iit << endl;
+    //    cout << " _ " << *iit << " _ " << endl;
     if (leafList.find(*iit) == leafList.end())
       return false;
   }
@@ -241,7 +244,9 @@ newickTreeNode * newickTreeNode::findMRCANode(const set<int> givenNodes) {
   if (this->isRoot())
     if (!(this->isCommonAncestor(givenNodes)))
       return NULL;
-  if (this->leftSubTree->isCommonAncestor(givenNodes))
+  if (this->isLeaf())
+    return (this->isCommonAncestor(givenNodes) ? this : NULL);
+  else if (this->leftSubTree->isCommonAncestor(givenNodes))
     return leftSubTree->findMRCANode(givenNodes);
   else if (this->rightSubTree->isCommonAncestor(givenNodes))
     return rightSubTree->findMRCANode(givenNodes);
@@ -249,6 +254,9 @@ newickTreeNode * newickTreeNode::findMRCANode(const set<int> givenNodes) {
     return this;
 }
 
+float newickTreeNode::getTotalTime() {
+  return (this->isLeaf() ? this->branchLen: this->branchLen+this->leftSubTree->getTotalTime()); 
+}
 
 // Obsolete function to get the lineage of a leaf node - path of 
 // internal nodes and times till you reach root.

@@ -1,4 +1,5 @@
 #include "argStatMiner.h"
+#include <iostream>
 
 argStatMiner::argStatMiner() {
   // Nothing to do yet. Might change in the near future. 
@@ -34,7 +35,7 @@ void argStatMiner::getStatsByDAC(int maxDerivedCount) {
 
 void argStatMiner::getStatsForSite(set<int> chosenLabels, uint treeIndex, uint leftOnTree, uint rightOnTree) {
   uint DAC = chosenLabels.size();
-  siteStat* stats = new siteStat[DAC];
+  vector<siteStat> stats = vector<siteStat>(DAC);
   for(uint i = 0; i < DAC; i++) {
     stats[i].frequency = DAC;
     stats[i].lenCore[0] = leftOnTree;
@@ -47,10 +48,10 @@ void argStatMiner::getStatsForSite(set<int> chosenLabels, uint treeIndex, uint l
   statVector.push_back(stats);
 }
 
-void argStatMiner::getStatsDirection(set<int> chosenLabels, uint treeIndex, siteStat * stats, bool left) {
+void argStatMiner::getStatsDirection(set<int> chosenLabels, uint treeIndex, vector<siteStat> & stats, bool left) {
   uint DAC = chosenLabels.size();
   set<int>::iterator sit;
-  uint i, j; // loop indices
+  int i, j; // loop indices
   int pop1Size = localARG->pop1Size;
 
   // Moving from this tree to the last one, keep track of how many recombinations etc, their lengths etc. 
@@ -63,11 +64,11 @@ void argStatMiner::getStatsDirection(set<int> chosenLabels, uint treeIndex, site
   // accordingly -
   if (left) {
     for (i = treeIndex - 1; i >= 0 ; i--) {
-      set<int> recombed = localARG->recombList[i];
+      set<int> & recombed = localARG->recombList[i];
       j = 0;
       int pop1ontree = pop1OnTree(localARG->recombedFromList[i], pop1Size);
       int pop2ontree = localARG->recombedFromList[i].size() - pop1ontree;
-      bool offcore = isOffCore(localARG->recombedFromList[i], stillOnCore);
+      bool offcore = isOffCore(localARG->recombedFromList[i], stillOnCore, localARG->recombFromTimes[i], localARG->mutTimes[treeIndex]);
       for (sit = chosenLabels.begin(); sit != chosenLabels.end(); sit++, j++) {
 	if (!onCore[j] && numRecomb[j] > 1) continue; // already measured upto 2 recombs and offCore
 	if (recombed.find(*sit) != recombed.end()) { // this line recombined off
@@ -104,7 +105,7 @@ void argStatMiner::getStatsDirection(set<int> chosenLabels, uint treeIndex, site
       j = 0;
       int pop1ontree = pop1OnTree(localARG->recombedToList[i], pop1Size);
       int pop2ontree = localARG->recombedToList[i].size() - pop1ontree;
-      bool offcore = isOffCore(localARG->recombedToList[i], stillOnCore);
+      bool offcore = isOffCore(localARG->recombedToList[i], stillOnCore, localARG->recombToTimes[i], localARG->mutTimes[treeIndex]);
       for (sit = chosenLabels.begin(); sit != chosenLabels.end(); sit++, j++) {
 	if (!onCore[j] && numRecomb[j] > 1) continue; // already measured upto 2 recombs and offCore
 	if (recombed.find(*sit) != recombed.end()) { // this line recombined off
@@ -146,18 +147,33 @@ int argStatMiner::pop1OnTree(set<int> leaves, int pivot) {
   return result;
 }
 
-bool argStatMiner::isOffCore(set<int> leaves, set<int> core) {
-  for (set<int>::iterator sit = leaves.begin(); sit != leaves.end(); sit++) {
-    if (core.find(*sit) == core.end()) // cannot find one of the leaves
-      return true;
+bool argStatMiner::isOffCore(set<int> leaves, set<int> core, float recombTime, float mutTime) {
+  // Core is the set of original mutation carrying leaves that still 
+  // stay on the core haploytpe. 
+  // The way to check if the the recombined went onto core or not
+  // is to check these things
+  // 1. A subset of the core haplotypes must be on the recombined to tree.
+  // 2. The recombination time - the time at which the recombed lines join
+  // the new tree is less than mutation time.
+  // If the recombed lines join a tree with at least some of the lines with core
+  // (less than all), then the 
+
+  int coreInTree = 0;
+  for (set<int>::iterator sit = core.begin(); sit != core.end(); sit++) {
+    if (leaves.find(*sit) != leaves.end()) // cannot find one of the leaves
+      coreInTree++;
   }
-  return false;
+  return (coreInTree > 0 && coreInTree < core.size()) || (coreInTree == core.size() && recombTime < mutTime); 
+}
+
+void argStatMiner::printStats(ofstream & output) {
+  for (vector<vector<siteStat> >::iterator vvit = statVector.begin(); vvit < statVector.end(); vvit++) {
+    for (vector<siteStat>::iterator vit = vvit->begin(); vit < vvit->end(); vit++) {
+      vit->print(output);
+    }
+  }
 }
 
 argStatMiner::~argStatMiner(){
-  // Should delete all the different stat vectors
-  for (vector<siteStat *>::iterator vit = statVector.begin(); vit < statVector.end(); vit++) {
-    if (*vit != NULL) 
-      delete *vit;
-  }
+  // Should delete all the different stat vectors - no longer necessary since it is a vector of vectors
 }
