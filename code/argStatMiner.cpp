@@ -16,7 +16,7 @@ void argStatMiner::getStatsByDAC(int maxDerivedCount) {
   uint curTreeIndex = -1;
   uint totalTreeLengths = 0;
   for (uint cnt=0; cnt < numsites; cnt++) {
-    if (localARG->variantPos[cnt] > totalTreeLengths) {
+    while (localARG->variantPos[cnt] > totalTreeLengths) {
       curTreeIndex++;
       totalTreeLengths += localARG->treeSeqLengths[curTreeIndex];
     }
@@ -27,20 +27,21 @@ void argStatMiner::getStatsByDAC(int maxDerivedCount) {
     // Get stats for this site - compute the left and right lengths
     // on this sequence before switching trees - leftOnTree and rightOnTree.
     // computed with respect to the current poly's position. 
-    uint leftOnTree = localARG->variantPos[cnt] - (totalTreeLengths - localARG->treeSeqLengths[curTreeIndex]);
-    uint rightOnTree = totalTreeLengths - localARG->variantPos[cnt];
+    int leftOnTree = localARG->variantPos[cnt] - (totalTreeLengths - localARG->treeSeqLengths[curTreeIndex]);
+    int rightOnTree = totalTreeLengths - localARG->variantPos[cnt];
     getStatsForSite(helper.getDerivedIndices(curPoly), curTreeIndex, leftOnTree, rightOnTree);
   }
 }
 
-void argStatMiner::getStatsForSite(set<int> chosenLabels, uint treeIndex, uint leftOnTree, uint rightOnTree) {
+void argStatMiner::getStatsForSite(set<int> chosenLabels, uint treeIndex, int leftOnTree, int rightOnTree) {
   uint DAC = chosenLabels.size();
   vector<siteStat> stats = vector<siteStat>(DAC);
-  for(uint i = 0; i < DAC; i++) {
+  set<int>::iterator sit = chosenLabels.begin(); 
+  for(uint i = 0; i < DAC; i++, sit++) {
+    stats[i].fromPop2 = (*sit >= localARG->pop1Size);
     stats[i].frequency = DAC;
-    stats[i].lenCore[0] = leftOnTree;
-    stats[i].lenCore[1] = rightOnTree;
-    stats[i].lenFirstRecomb[0] = stats[i].lenFirstRecomb[1] = 0;
+    stats[i].lenCore[0] = stats[i].lenFirstRecomb[0] = leftOnTree;
+    stats[i].lenCore[1] = stats[i].lenFirstRecomb[1] = rightOnTree;
     stats[i].lenSecondRecomb[0] = stats[i].lenSecondRecomb[1] = 0;
   }
   getStatsDirection(chosenLabels, treeIndex, stats, true);
@@ -81,9 +82,9 @@ void argStatMiner::getStatsDirection(set<int> chosenLabels, uint treeIndex, vect
 	    stats[j].numPop1Core[0] = pop1ontree;
 	    stats[j].numPop2Core[0] = pop2ontree;
 	    stillOnCore.erase(*sit);
+	    onCore[j] = false;
 	  }
 	  numRecomb[j]++;
-	  onCore[j] = false;
 	}
 	// Increment the lengths - according to which one you are measuring.
 	if (onCore[j])
@@ -118,9 +119,9 @@ void argStatMiner::getStatsDirection(set<int> chosenLabels, uint treeIndex, vect
 	    stats[j].numPop1Core[1] = pop1ontree;
 	    stats[j].numPop2Core[1] = pop2ontree;
 	    stillOnCore.erase(*sit);
+	    onCore[j] = false;
 	  }
 	  numRecomb[j]++;
-	  onCore[j] = false;
 	}
 	// Increment the lengths - according to which one you are measuring.
 	if (onCore[j])

@@ -2,14 +2,14 @@
 #include <iostream>
 
 siteStat::siteStat() {
-  fromPop1 = true;
+  fromPop2 = false;
   lenCore[0] = lenCore[1] = -1;
   lenFirstRecomb[0] = lenFirstRecomb[1] = -1;
   lenSecondRecomb[0] = lenSecondRecomb[1] = -1;
-  numPop1Core[0] = numPop1Core[1] = -1;
-  numPop2Core[0] = numPop2Core[1] = -1;
-  numPop1First[0] = numPop1First[1] = -1;
-  numPop2First[0] = numPop2First[1] = -1;
+  numPop1Core[0] = numPop1Core[1] = 0;
+  numPop2Core[0] = numPop2Core[1] = 0;
+  numPop1First[0] = numPop1First[1] = 0;
+  numPop2First[0] = numPop2First[1] = 0;
   frequency = 0.0;
 }
 
@@ -18,7 +18,15 @@ bool siteStat::isEdge() {
 }
 
 float siteStat::getPopPropCore(bool left=true) {
-  return (left ? (numPop1Core[0]*1.0/(numPop1Core[0]+numPop2Core[0])) : (numPop1Core[1]*1.0/(numPop1Core[1]+numPop2Core[1])) );
+  if (left) { 
+    if ((numPop1Core[0]+numPop2Core[0]) == 0)
+      return (numPop1Core[0]*1.0/(numPop1Core[0]+numPop2Core[0]));
+    else return -1;
+  } else {
+    if ((numPop1Core[1]+numPop2Core[1]) == 0)
+      return (numPop1Core[1]*1.0/(numPop1Core[1]+numPop2Core[1]));
+    else return -1;
+  }
 }
 
 pair<bool, bool> siteStat::isFirstOffCore() {
@@ -33,7 +41,7 @@ pair<bool, bool> siteStat::isFirstOffCore() {
 }
 
 void siteStat::print(ofstream & output) {
-  output << (int)fromPop1+1 << "\t";
+  output << (int)fromPop2+1 << "\t";
   output << frequency << "\t";
   output << lenCore[0] << "\t" << lenCore[1] << "\t";
   output << lenFirstRecomb[0] << "\t" << lenFirstRecomb[1] << "\t";

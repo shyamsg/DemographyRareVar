@@ -14,7 +14,7 @@
    Members of the class:
    ---------------------
    ### Attributes:###
-   - fromPop1
+   - fromPop2
    - lenCore
    - lenSecondRecomb
    - numPop1
@@ -41,7 +41,7 @@ using namespace std;
 
 class siteStat {
  public:
-  bool fromPop1; /**<Is the line sampled from population 1?*/
+  bool fromPop2; /**<Is the line sampled from population 1?*/
   int lenCore[2]; /**<Length of the core haplotype going left and right.*/
   int lenFirstRecomb[2]; /**<Length of segment from site to first recombination.*/
   int lenSecondRecomb[2]; /**<Length of segment from first to second recombination.*/
