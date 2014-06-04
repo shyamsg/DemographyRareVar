@@ -123,25 +123,28 @@ set<int> newickTreeNode::getRecombined (newickTreeNode * other) {
       }
       return temp;
     }
+    // the root moved back - both left and right branches are longer and this is the
+    // root - :) - this was a pain to debug.
+    if (isRoot() && this->leftSubTree->branchLen != other->leftSubTree->branchLen 
+	&& this->rightSubTree->branchLen != other->rightSubTree->branchLen) { 
+      float leftProp = this->leftSubTree->branchLen;
+      leftProp = leftProp/(leftProp+this->rightSubTree->branchLen);
+      if (drand48() < leftProp)
+	temp = this->leftSubTree->leafList;
+      else
+	temp = this->rightSubTree->leafList;
+      return temp;
+    }
     // the length of the left subtree branches are different - leaf lists
     // are not, so invisible recombination, assign the subtree as recombined
     // proportional to its branch length
     if (this->leftSubTree->branchLen != other->leftSubTree->branchLen) {
-      if (isRoot()) { // the root moved back
-	float leftProp = this->leftSubTree->branchLen;
-	leftProp = leftProp/(leftProp+this->rightSubTree->branchLen);
-	if (drand48() < leftProp)
-	  temp = this->leftSubTree->leafList;
-	else
-	  temp = this->rightSubTree->leafList;
-      } else {
-	float leftProp = this->leftSubTree->leftSubTree->branchLen;
-	leftProp = leftProp/(leftProp+this->leftSubTree->rightSubTree->branchLen);
-	if (drand48() < leftProp)
-	  temp = this->leftSubTree->leftSubTree->leafList;
-	else
-	  temp = this->leftSubTree->rightSubTree->leafList;
-      }
+      float leftProp = this->leftSubTree->leftSubTree->branchLen;
+      leftProp = leftProp/(leftProp+this->leftSubTree->rightSubTree->branchLen);
+      if (drand48() < leftProp)
+	temp = this->leftSubTree->leftSubTree->leafList;
+      else
+	temp = this->leftSubTree->rightSubTree->leafList;
       return temp;
     }
     // the length of the right subtree branches are different - leaf lists
