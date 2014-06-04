@@ -142,6 +142,7 @@ void ARG::populateRecombList() {
 void ARG::parseMACSOutput(const char * macsFileName){
   ifstream macsfile(macsFileName);
   string line;
+  int cnt = 0;
   if (macsfile.is_open()) {
     while(getline(macsfile, line)) {
       boost::tokenizer<> tok(line);
@@ -151,6 +152,10 @@ void ARG::parseMACSOutput(const char * macsFileName){
       if (firstToken == "NEWICK") {
 	string temp = line.substr(line.find(sqOpen));
 	getTree(temp);
+	if (++cnt % 1000 == 0) {
+	  cerr << "Loaded " << cnt << " trees." << endl;
+	  cerr.flush();
+	}
       } else {
 	if (firstToken == "SITE") {
 	  getVariants(line);

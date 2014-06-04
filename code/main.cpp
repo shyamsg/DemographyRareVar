@@ -21,13 +21,23 @@ int main(int argc, char * argv[])
   seed = seed << 56 | rand();
   seed = 6773413840411030749;
   srand48(seed);
-  cout << "Random seed: " << seed << endl;
+  ofstream outfile(argv[3]);
+  outfile << "COMMAND:";
+  for (int i = 0; i < argc; i++)
+    outfile << " " << argv[i];
+  outfile << endl;
+  outfile << "SEED: " << seed << endl;
   ARG myArg;
+  cerr << "Parsing ARG ..." << endl;
   myArg.parseMACSOutput(argv[1]);
+  cerr << "Done parsing ARG." << endl;
   int maxDAC = atoi(argv[2]);
+  cerr << "Mining stats ..." << endl;
   argStatMiner myMiner(&myArg);
   myMiner.getStatsByDAC(maxDAC);
-  ofstream outfile(argv[3]);
+  cerr << "Done mining stats." << endl;
+  cerr << "Writing output ..." << endl;
   outfile << "Pop\tDAC\tcoreLeft\tcoreRight\tfirstLeft\tfirstRight\tsecondLeft\tsecondRight\tpop1CoreLeft\tpop1CoreRight\tpop2CoreLeft\tpop2coreRight\tpop1FirstLeft\tpop1FirstRight\tpop2FirstLeft\tpop2FirstRight" << endl;
   myMiner.printStats(outfile);
+  cerr << "Done writing output." << endl;
 }

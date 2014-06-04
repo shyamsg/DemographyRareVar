@@ -20,6 +20,10 @@ void argStatMiner::getStatsByDAC(int maxDerivedCount) {
       curTreeIndex++;
       totalTreeLengths += localARG->treeSeqLengths[curTreeIndex];
     }
+    if (cnt % 1000 == 0) {
+      cerr << "Processed " << cnt << " sites." << endl;
+      cerr.flush();
+    }
     vector<bool> & curPoly = localARG->polymorphisms[cnt];
     int curDAC = helper.siteCount(curPoly);
     // Site's DAC is greater than threshold.
