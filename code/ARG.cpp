@@ -43,7 +43,7 @@ void ARG::getVariants(string & line) {
 
 void ARG::getTree(string & line){
   string temp = line.substr(1,(line.find(sqClose)-1));
-  treeSeqLengths.push_back(stoi(temp));
+  int curTreeLen = stoi(temp);
   temp = line.substr(line.find(sqClose)+1);
   // Variables for looping to make tree
   string::size_type sz;
@@ -106,7 +106,18 @@ void ARG::getTree(string & line){
     index++;
     if (countBracks == 0 || index >= temp.length()) break;
   }
-  treeList.push_back(currentNode);
+  // add the current node to the list of trees
+  if (treeList.empty()) {
+    treeList.push_back(currentNode);
+    treeSeqLengths.push_back(curTreeLen);
+  } else if (*treeList.back() == *currentNode) {
+    curTreeLen += treeSeqLengths.back();
+    treeSeqLengths.pop_back();
+    treeSeqLengths.push_back(curTreeLen);
+  } else { 
+    treeList.push_back(currentNode);
+    treeSeqLengths.push_back(curTreeLen);
+  }
 }
 
 void ARG::populateRecombList() {

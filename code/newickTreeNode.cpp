@@ -134,7 +134,6 @@ set<int> newickTreeNode::getRecombined (newickTreeNode * other) {
 	  temp = this->leftSubTree->leafList;
 	else
 	  temp = this->rightSubTree->leafList;
-	temp = this->rightSubTree->leafList;
       } else {
 	float leftProp = this->leftSubTree->leftSubTree->branchLen;
 	leftProp = leftProp/(leftProp+this->leftSubTree->rightSubTree->branchLen);
@@ -142,7 +141,6 @@ set<int> newickTreeNode::getRecombined (newickTreeNode * other) {
 	  temp = this->leftSubTree->leftSubTree->leafList;
 	else
 	  temp = this->leftSubTree->rightSubTree->leafList;
-	temp = this->rightSubTree->leafList;
       }
       return temp;
     }
