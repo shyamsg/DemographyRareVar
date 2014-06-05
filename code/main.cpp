@@ -19,7 +19,6 @@ int main(int argc, char * argv[])
   unsigned long seed = (time(NULL)<<4)^0x31F29B378728B8EE;
   srand(time(NULL));
   seed = seed << 56 | rand();
-  seed = 6773413840411030749;
   srand48(seed);
   ofstream outfile(argv[3]);
   outfile << "COMMAND:";
