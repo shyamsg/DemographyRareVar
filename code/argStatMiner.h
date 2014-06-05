@@ -75,7 +75,7 @@ class argStatMiner {
      allele count (DAC). It calls the getStatsForSite function for each site making
      sure that these sites get stored under the appropriate DAC. 
   */
-  void getStatsByDAC(int maxDerivedCount);
+  void getStatsByDAC(int maxDerivedCount, ofstream & outfile);
 
   /**
      Print the statistics computed from the ARG to a file.

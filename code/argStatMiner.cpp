@@ -9,7 +9,7 @@ argStatMiner::argStatMiner(ARG *topARG) {
   localARG = topARG;
 }
 
-void argStatMiner::getStatsByDAC(int maxDerivedCount) {
+void argStatMiner::getStatsByDAC(int maxDerivedCount, ofstream & outfile) {
   // Test sites to see if this site's dac fits the bill
   // If it does, then do stuff for this site. 
   uint numsites = localARG->mutTimes.size();
@@ -23,6 +23,8 @@ void argStatMiner::getStatsByDAC(int maxDerivedCount) {
     if (cnt % 1000 == 0) {
       cerr << "Processed " << cnt << " sites." << endl;
       cerr.flush();
+      this->printStats(outfile);
+      statVector.clear();
     }
     vector<bool> & curPoly = localARG->polymorphisms[cnt];
     int curDAC = helper.siteCount(curPoly);

@@ -34,10 +34,10 @@ int main(int argc, char * argv[])
   int maxDAC = atoi(argv[2]);
   cerr << "Mining stats ..." << endl;
   argStatMiner myMiner(&myArg);
-  myMiner.getStatsByDAC(maxDAC);
+  outfile << "Pop\tDAC\tcoreLeft\tcoreRight\tfirstLeft\tfirstRight\tsecondLeft\tsecondRight\tpop1CoreLeft\tpop1CoreRight\tpop2CoreLeft\tpop2coreRight\tpop1FirstLeft\tpop1FirstRight\tpop2FirstLeft\tpop2FirstRight" << endl;
+  myMiner.getStatsByDAC(maxDAC, outfile);
   cerr << "Done mining stats." << endl;
   cerr << "Writing output ..." << endl;
-  outfile << "Pop\tDAC\tcoreLeft\tcoreRight\tfirstLeft\tfirstRight\tsecondLeft\tsecondRight\tpop1CoreLeft\tpop1CoreRight\tpop2CoreLeft\tpop2coreRight\tpop1FirstLeft\tpop1FirstRight\tpop2FirstLeft\tpop2FirstRight" << endl;
   myMiner.printStats(outfile);
   cerr << "Done writing output." << endl;
 }
