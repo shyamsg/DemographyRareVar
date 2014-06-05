@@ -152,7 +152,7 @@ void ARG::parseMACSOutput(const char * macsFileName){
       if (firstToken == "NEWICK") {
 	string temp = line.substr(line.find(sqOpen));
 	getTree(temp);
-	if (++cnt % 10 == 0) {
+	if (++cnt % 1000 == 0) {
 	  cerr << "Loaded " << cnt << " trees." << endl;
 	  cerr.flush();
 	}
