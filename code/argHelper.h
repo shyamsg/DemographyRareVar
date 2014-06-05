@@ -22,6 +22,7 @@
 
 #include <vector>
 #include <set>
+#include <utility>
 #include "newickTreeNode.h"
 
 using namespace std;
@@ -36,7 +37,7 @@ class argHelper {
   /**
      Calculates the derived allele count of the given site
   */
-  int siteCount(vector<bool> & polys);
+  pair<int, int> siteCount(vector<bool> & polys, int pop1size);
 
   /**
      Gets the indices of samples that carry derived allele

@@ -8,10 +8,17 @@ float argHelper::siteFreq(vector<bool> & polys) {
   return (freq/polys.size());
 }
 
-int argHelper::siteCount(vector<bool> & polys) {
-  int count = 0.0;
-  for (vector<bool>::iterator vit = polys.begin(); vit < polys.end(); vit++) {
-    count += (*vit ? 1:0);
+pair<int, int> argHelper::siteCount(vector<bool> & polys, int pop1size) {
+  pair<int, int> count;
+  count.first = 0;
+  count.second = 0;
+  int index = 0;
+  for (vector<bool>::iterator vit = polys.begin(); vit < polys.end(); vit++, index++) {
+    if (index < pop1size) {
+      count.first += (*vit ? 1:0); 
+    } else {
+      count.second += (*vit ? 1:0); 
+    }
   }
   return count;
 }

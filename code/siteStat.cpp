@@ -10,7 +10,8 @@ siteStat::siteStat() {
   numPop2Core[0] = numPop2Core[1] = 0;
   numPop1First[0] = numPop1First[1] = 0;
   numPop2First[0] = numPop2First[1] = 0;
-  frequency = 0.0;
+  freq1 = 0;
+  freq2 = 0;
 }
 
 bool siteStat::isEdge() {
@@ -42,7 +43,7 @@ pair<bool, bool> siteStat::isFirstOffCore() {
 
 void siteStat::print(ofstream & output) {
   output << (int)fromPop2+1 << "\t";
-  output << frequency << "\t";
+  output << age << "\t" << freq1 << "\t" << freq2 << "\t";
   output << lenCore[0] << "\t" << lenCore[1] << "\t";
   output << lenFirstRecomb[0] << "\t" << lenFirstRecomb[1] << "\t";
   output << lenSecondRecomb[0] << "\t" << lenSecondRecomb[1] << "\t";

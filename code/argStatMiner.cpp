@@ -20,32 +20,37 @@ void argStatMiner::getStatsByDAC(int maxDerivedCount, ofstream & outfile) {
       curTreeIndex++;
       totalTreeLengths += localARG->treeSeqLengths[curTreeIndex];
     }
-    if (cnt % 1000 == 0) {
+    if (cnt % 100 == 0) {
       cerr << "Processed " << cnt << " sites." << endl;
       cerr.flush();
       this->printStats(outfile);
+      outfile.flush();
       statVector.clear();
     }
     vector<bool> & curPoly = localARG->polymorphisms[cnt];
-    int curDAC = helper.siteCount(curPoly);
+    pair<int, int> curDACs = helper.siteCount(curPoly, localARG->pop1Size);
     // Site's DAC is greater than threshold.
-    if (curDAC > maxDerivedCount) continue;
+    if (curDACs.first > maxDerivedCount || curDACs.second > maxDerivedCount) continue;
+    if (curDACs.first == 0 && curDACs.second == 0) continue;
     // Get stats for this site - compute the left and right lengths
     // on this sequence before switching trees - leftOnTree and rightOnTree.
     // computed with respect to the current poly's position. 
     int leftOnTree = localARG->variantPos[cnt] - (totalTreeLengths - localARG->treeSeqLengths[curTreeIndex]);
     int rightOnTree = totalTreeLengths - localARG->variantPos[cnt];
-    getStatsForSite(helper.getDerivedIndices(curPoly), curTreeIndex, leftOnTree, rightOnTree);
+    //    cerr << "Info " << curDACs.first << " " << curDACs.second  << " " << leftOnTree << " " << rightOnTree << endl;
+    getStatsForSite(helper.getDerivedIndices(curPoly), curTreeIndex, leftOnTree, rightOnTree, curDACs, localARG->mutTimes[cnt]);
   }
 }
 
-void argStatMiner::getStatsForSite(set<int> chosenLabels, uint treeIndex, int leftOnTree, int rightOnTree) {
+void argStatMiner::getStatsForSite(set<int> chosenLabels, uint treeIndex, int leftOnTree, int rightOnTree, pair<int, int> curDACs, float age) {
   uint DAC = chosenLabels.size();
   vector<siteStat> stats = vector<siteStat>(DAC);
   set<int>::iterator sit = chosenLabels.begin(); 
   for(uint i = 0; i < DAC; i++, sit++) {
     stats[i].fromPop2 = (*sit >= localARG->pop1Size);
-    stats[i].frequency = DAC;
+    stats[i].freq1 = curDACs.first;
+    stats[i].freq2 = curDACs.second;
+    stats[i].age = age;
     stats[i].lenCore[0] = stats[i].lenFirstRecomb[0] = leftOnTree;
     stats[i].lenCore[1] = stats[i].lenFirstRecomb[1] = rightOnTree;
     stats[i].lenSecondRecomb[0] = stats[i].lenSecondRecomb[1] = 0;
@@ -76,11 +81,11 @@ void argStatMiner::getStatsDirection(set<int> chosenLabels, uint treeIndex, vect
       set<int> & recombed = localARG->recombList[i];
       j = 0;
       // recombedFrom replaced by on the fly call
-      set<int> recombedFromList = localARG->treeList[i]->getRecombinedAdjoint(localARG->recombList[i]);
-      float recombFromTime = localARG->treeList[i]->findMRCANode(localARG->recombList[i])->getTotalTime();
-      int pop1ontree = pop1OnTree(recombedFromList, pop1Size);
-      int pop2ontree = recombedFromList.size() - pop1ontree;
-      bool offcore = isOffCore(recombedFromList, stillOnCore, recombFromTime, localARG->mutTimes[treeIndex]);
+      //      set<int> recombedFromList = localARG->treeList[i]->getRecombinedAdjoint(localARG->recombList[i]);
+      //      float recombFromTime = localARG->treeList[i]->findMRCANode(localARG->recombList[i])->getTotalTime();
+      int pop1ontree = pop1OnTree(localARG->recombedFromList[i], pop1Size);
+      int pop2ontree = localARG->recombedFromList[i].size() - pop1ontree;
+      bool offcore = isOffCore(localARG->recombedFromList[i], stillOnCore, localARG->recombFromTimes[i], localARG->mutTimes[treeIndex]);
       for (sit = chosenLabels.begin(); sit != chosenLabels.end(); sit++, j++) {
 	if (!onCore[j] && numRecomb[j] > 1) continue; // already measured upto 2 recombs and offCore
 	if (recombed.find(*sit) != recombed.end()) { // this line recombined off
@@ -116,11 +121,11 @@ void argStatMiner::getStatsDirection(set<int> chosenLabels, uint treeIndex, vect
       set<int> recombed = localARG->recombList[i];
       j = 0;
       // recombedTo replaced by on the fly call
-      set<int> recombedToList = localARG->treeList[i+1]->getRecombinedAdjoint(localARG->recombList[i]);
-      float recombToTime = localARG->treeList[i+1]->findMRCANode(localARG->recombList[i])->getTotalTime();
-      int pop1ontree = pop1OnTree(recombedToList, pop1Size);
-      int pop2ontree = recombedToList.size() - pop1ontree;
-      bool offcore = isOffCore(recombedToList, stillOnCore, recombToTime, localARG->mutTimes[treeIndex]);
+      //      set<int> recombedToList = localARG->treeList[i+1]->getRecombinedAdjoint(localARG->recombList[i]);
+      //      float recombToTime = localARG->treeList[i+1]->findMRCANode(localARG->recombList[i])->getTotalTime();
+      int pop1ontree = pop1OnTree(localARG->recombedToList[i], pop1Size);
+      int pop2ontree = localARG->recombedToList[i].size() - pop1ontree;
+      bool offcore = isOffCore(localARG->recombedToList[i], stillOnCore, localARG->recombToTimes[i], localARG->mutTimes[treeIndex]);
       for (sit = chosenLabels.begin(); sit != chosenLabels.end(); sit++, j++) {
 	if (!onCore[j] && numRecomb[j] > 1) continue; // already measured upto 2 recombs and offCore
 	if (recombed.find(*sit) != recombed.end()) { // this line recombined off

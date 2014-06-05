@@ -132,10 +132,10 @@ void ARG::populateRecombList() {
   // recombList:   0    1    2    3    4       n-1
   for (unsigned int tindex = 0; tindex < (this->treeList.size() - 1); tindex++) {
     recombList.push_back(treeList[tindex]->getRecombined(treeList[tindex+1]));
-    //    recombedToList.push_back(treeList[tindex+1]->getRecombinedAdjoint(recombList.back()));
-    //    recombToTimes.push_back(treeList[tindex+1]->findMRCANode(recombList.back())->getTotalTime());
-    //    recombedFromList.push_back(treeList[tindex]->getRecombinedAdjoint(recombList.back()));
-    //    recombFromTimes.push_back(treeList[tindex]->findMRCANode(recombList.back())->getTotalTime());
+    recombedToList.push_back(treeList[tindex+1]->getRecombinedAdjoint(recombList.back()));
+    recombToTimes.push_back(treeList[tindex+1]->findMRCANode(recombList.back())->getTotalTime());
+    recombedFromList.push_back(treeList[tindex]->getRecombinedAdjoint(recombList.back()));
+    recombFromTimes.push_back(treeList[tindex]->findMRCANode(recombList.back())->getTotalTime());
   }
 }
 
@@ -152,7 +152,7 @@ void ARG::parseMACSOutput(const char * macsFileName){
       if (firstToken == "NEWICK") {
 	string temp = line.substr(line.find(sqOpen));
 	getTree(temp);
-	if (++cnt % 1000 == 0) {
+	if (++cnt % 100 == 0) {
 	  cerr << "Loaded " << cnt << " trees." << endl;
 	  cerr.flush();
 	}

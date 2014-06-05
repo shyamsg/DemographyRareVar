@@ -49,8 +49,10 @@ class siteStat {
   int numPop2Core[2]; /**<When switching off core haplotype, count of pop2 in recombined-to subtree.*/
   int numPop1First[2]; /**<At first recombination, count of pop1 in recombined-to subtree.*/
   int numPop2First[2]; /**<At first recombination, count of pop2 in recombined-to subtree.*/
-  float frequency;
-
+  float age;
+  int freq1;
+  int freq2;
+  
   /**
      Constructor. Set all the array counts to -1 and frequency to -1.
   */
