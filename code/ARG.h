@@ -73,8 +73,6 @@ class ARG {
   vector<newickTreeNode *> treeList; /**< List of trees that make up the ARG*/
   vector<int> treeSeqLengths; /**< Vector containing the lengths of the sequences for each tree*/
   vector<set<int> > recombList; /**< List of lines that recombined from tree t to t+1*/
-  vector<set<int> > recombedToList; /**< List of lines that were recombined onto*/
-  vector<set<int> > recombedFromList; /**< List of lines that were recombined from*/
   vector<float> recombFromTimes; /**< Times of recombination from each tree */
   vector<float> recombToTimes; /**< Times of recombination to each tree */
   vector<vector<bool> > polymorphisms; /**< Matrix of polymorphisms - stored as 0/1 */

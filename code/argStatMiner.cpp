@@ -67,13 +67,18 @@ void argStatMiner::getStatsDirection(set<int> chosenLabels, uint treeIndex, vect
   // moving left - first tree encountered is your own - then you must check the recombList between your
   // own and previous - if chosen line is part of the recombined set then you must adjust the stats 
   // accordingly -
+  // Changes made to compute the recombTo and recombFrom List and times on the fly - to save memory
+  // Important to check how much memory this saves.
   if (left) {
     for (i = treeIndex - 1; i >= 0 ; i--) {
       set<int> & recombed = localARG->recombList[i];
       j = 0;
-      int pop1ontree = pop1OnTree(localARG->recombedFromList[i], pop1Size);
-      int pop2ontree = localARG->recombedFromList[i].size() - pop1ontree;
-      bool offcore = isOffCore(localARG->recombedFromList[i], stillOnCore, localARG->recombFromTimes[i], localARG->mutTimes[treeIndex]);
+      // recombedFrom replaced by on the fly call
+      set<int> recombedFromList = localARG->treeList[i]->getRecombinedAdjoint(localARG->recombList[i]);
+      float recombFromTime = localARG->treeList[i]->findMRCANode(localARG->recombList[i])->getTotalTime();
+      int pop1ontree = pop1OnTree(recombedFromList, pop1Size);
+      int pop2ontree = recombedFromList.size() - pop1ontree;
+      bool offcore = isOffCore(recombedFromList, stillOnCore, recombFromTime, localARG->mutTimes[treeIndex]);
       for (sit = chosenLabels.begin(); sit != chosenLabels.end(); sit++, j++) {
 	if (!onCore[j] && numRecomb[j] > 1) continue; // already measured upto 2 recombs and offCore
 	if (recombed.find(*sit) != recombed.end()) { // this line recombined off
@@ -108,9 +113,12 @@ void argStatMiner::getStatsDirection(set<int> chosenLabels, uint treeIndex, vect
     for (i = treeIndex; i < (localARG->treeList.size() - 1) ; i++) {
       set<int> recombed = localARG->recombList[i];
       j = 0;
-      int pop1ontree = pop1OnTree(localARG->recombedToList[i], pop1Size);
-      int pop2ontree = localARG->recombedToList[i].size() - pop1ontree;
-      bool offcore = isOffCore(localARG->recombedToList[i], stillOnCore, localARG->recombToTimes[i], localARG->mutTimes[treeIndex]);
+      // recombedTo replaced by on the fly call
+      set<int> recombedToList = localARG->treeList[i+1]->getRecombinedAdjoint(localARG->recombList[i]);
+      float recombToTime = localARG->treeList[i+1]->findMRCANode(localARG->recombList[i])->getTotalTime();
+      int pop1ontree = pop1OnTree(recombedToList, pop1Size);
+      int pop2ontree = recombedToList.size() - pop1ontree;
+      bool offcore = isOffCore(recombedToList, stillOnCore, recombToTime, localARG->mutTimes[treeIndex]);
       for (sit = chosenLabels.begin(); sit != chosenLabels.end(); sit++, j++) {
 	if (!onCore[j] && numRecomb[j] > 1) continue; // already measured upto 2 recombs and offCore
 	if (recombed.find(*sit) != recombed.end()) { // this line recombined off
