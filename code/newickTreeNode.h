@@ -18,7 +18,7 @@
    - leftSubTree
    - rightSubTree
    - parent
-   - label
+   - minLeafNode
    - branchLen
    
    ### Methods:###
@@ -28,7 +28,6 @@
    - switchChildren
    - isLeaf
    - isRoot
-   - minLeafNode
    - findLeaf
    - isCommonAncestor
    - findMRCANode
@@ -62,7 +61,7 @@ class newickTreeNode {
   newickTreeNode * leftSubTree; /**< Left sub-tree.*/
   newickTreeNode * rightSubTree; /**< Right sub-tree.*/
   newickTreeNode * parent; /**< Parent node.*/
-  int label; /**< Leaf node label */
+  int minLeafNode; /**< Min leaf node label */
   float branchLen; /**< Branch length*/
 
   /**
@@ -117,11 +116,6 @@ class newickTreeNode {
      Return pointer to leaf node with chosen label.
   */
   newickTreeNode * findLeaf(int leafNodeName);
-  
-  /**
-     Return the minimum leaf node attached to this node.
-  */
-  int minLeafNode();
   
   /**
      Prints newick trees using the bracket representation.

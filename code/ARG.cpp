@@ -86,9 +86,10 @@ void ARG::getTree(string & line){
 	currentNode = currentNode->parent;
 	//	currentNode->leafList.insert(currentNode->leftSubTree->leafList.begin(), currentNode->leftSubTree->leafList.end());
 	//	currentNode->leafList.insert(currentNode->rightSubTree->leafList.begin(), currentNode->rightSubTree->leafList.end());
-	if (currentNode->leftSubTree->minLeafNode() > currentNode->rightSubTree->minLeafNode()) {
+	if (currentNode->leftSubTree->minLeafNode > currentNode->rightSubTree->minLeafNode) {
 	  currentNode->switchNodes();
 	}
+	currentNode->minLeafNode = currentNode->leftSubTree->minLeafNode;
 	countBracks--;
 	break;
       }
@@ -97,7 +98,7 @@ void ARG::getTree(string & line){
 	string temp1 = temp.substr(index);
 	if (isName){
 	  //	  currentNode->leafList.insert(stoi(temp1, &sz));
-	  currentNode->label = stoi(temp1, &sz);
+	  currentNode->minLeafNode = stoi(temp1, &sz);
 	} else {
 	  currentNode->branchLen = stof(temp1, &sz);
 	}

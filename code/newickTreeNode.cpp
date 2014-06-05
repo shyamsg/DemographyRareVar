@@ -32,7 +32,7 @@ newickTreeNode::~newickTreeNode() {
 set<int> newickTreeNode::leafList() const {
   set<int> out;
   if (this->leftSubTree == NULL && this->rightSubTree == NULL) {
-    out.insert(label);
+    out.insert(minLeafNode);
     return out;
   }
   set<int> temp = this->leftSubTree->leafList();
@@ -60,7 +60,7 @@ void newickTreeNode::switchNodes() {
     return;
   }
   // if left's min leaf is less than right's min leaf switch them.
-  if (leftSubTree->minLeafNode() > rightSubTree->minLeafNode()) {
+  if (leftSubTree->minLeafNode > rightSubTree->minLeafNode) {
     newickTreeNode * temp = leftSubTree;
     leftSubTree = rightSubTree;
     rightSubTree = temp;
@@ -203,7 +203,7 @@ set<int> newickTreeNode::getRecombinedAdjoint(const set<int> leaves) {
 
 newickTreeNode * newickTreeNode::findLeaf(int leafNodeName) {
     if (this->isLeaf()) {
-      if (this->minLeafNode() == leafNodeName)
+      if (this->minLeafNode == leafNodeName)
 	return this;
       else
 	return NULL;
@@ -220,15 +220,10 @@ newickTreeNode * newickTreeNode::findLeaf(int leafNodeName) {
     return NULL;
 }
 
-int newickTreeNode::minLeafNode(){
-  if (leafList().empty()) return -1;
-  return *(leafList().begin());
-}
-
 void newickTreeNode::printTree() {
   if (!this->isLeaf()) cout << "(";
   if (this->isLeaf()) {
-    cout << minLeafNode(); 
+    cout << minLeafNode; 
   } else {
     if (leftSubTree != NULL)
       leftSubTree->printTree();
