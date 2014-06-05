@@ -18,10 +18,11 @@
    - leftSubTree
    - rightSubTree
    - parent
-   - leafList
+   - label
    - branchLen
    
    ### Methods:###
+   - leafList
    - leafDifference
    - constructors
    - switchChildren
@@ -61,9 +62,9 @@ class newickTreeNode {
   newickTreeNode * leftSubTree; /**< Left sub-tree.*/
   newickTreeNode * rightSubTree; /**< Right sub-tree.*/
   newickTreeNode * parent; /**< Parent node.*/
-  set<int> leafList; /**< List of leaves under this node */
+  int label; /**< Leaf node label */
   float branchLen; /**< Branch length*/
-  
+
   /**
      A constructor. Sets all pointers to NULL, branchLen to zero
      and leafList to empty set. 
@@ -83,6 +84,11 @@ class newickTreeNode {
   */
   ~newickTreeNode();
   
+  /**
+     LeafList for this node.
+  */
+  set<int> leafList() const;
+
   /**
      Is this node a root node? Returns a boolean.
   */

@@ -29,6 +29,19 @@ newickTreeNode::~newickTreeNode() {
   delete rightSubTree;
 }
 
+set<int> newickTreeNode::leafList() const {
+  set<int> out;
+  if (this->leftSubTree == NULL && this->rightSubTree == NULL) {
+    out.insert(label);
+    return out;
+  }
+  set<int> temp = this->leftSubTree->leafList();
+  out.insert(temp.begin(), temp.end());
+  temp = this->rightSubTree->leafList();
+  out.insert(temp.begin(), temp.end());
+  return out;
+}
+
 bool newickTreeNode::isRoot() {
   return (this->parent == NULL);
 }
@@ -58,7 +71,7 @@ bool newickTreeNode::operator== (const newickTreeNode & other) const {
   //Check that the trees under the node are the same.
   if (this->branchLen != other.branchLen)
     return false;
-  if (this-> leafList != other.leafList)
+  if (this->leafList() != other.leafList())
     return false;
   if (this->leftSubTree != NULL)
     if (this->rightSubTree != NULL)
@@ -81,7 +94,8 @@ set<int> newickTreeNode::leafSymmetricDifference(set<int> otherLeaves) {
   set<int> leafDiff;
   set<int>::iterator sit;
   set<int>::iterator sit2;
-  for (sit = this->leafList.begin(); sit != this->leafList.end(); sit++) {
+  set<int> tempLeafList = this->leafList();
+  for (sit = tempLeafList.begin(); sit != tempLeafList.end(); sit++) {
     sit2 = otherLeaves.find(*sit);
     if ( sit2 == otherLeaves.end()) {
       leafDiff.insert(*sit);
@@ -90,7 +104,7 @@ set<int> newickTreeNode::leafSymmetricDifference(set<int> otherLeaves) {
     }
   }
   for (sit = otherLeaves.begin(); sit != otherLeaves.end(); sit++) {
-    if (this->leafList.find(*sit) == this->leafList.end()) {
+    if (tempLeafList.find(*sit) == tempLeafList.end()) {
       leafDiff.insert(*sit);
     }
   }
@@ -110,16 +124,16 @@ set<int> newickTreeNode::getRecombined (newickTreeNode * other) {
   if (this->leftSubTree != NULL && this->rightSubTree != NULL &&
     other->leftSubTree != NULL && other->rightSubTree != NULL) {
     // nodes have switched from left to right subtree or vice versa
-    if (this->leftSubTree->leafList != other->leftSubTree->leafList) {
+    if (this->leftSubTree->leafList() != other->leftSubTree->leafList()) {
       // compute the difference in the leaf list and this is the set of lines
       // that has recombined
-      unsigned int sizediff = (unsigned int) abs((int) this->leftSubTree->leafList.size() - 
-						 (int) other->leftSubTree->leafList.size());
+      unsigned int sizediff = (unsigned int) abs((int) this->leftSubTree->leafList().size() - 
+						 (int) other->leftSubTree->leafList().size());
       // If the subtree containing 0 label switches from left to right then the root of this
       // tree is going to get rearranged - switch of left and right nodes - check for that 
-      temp = this->leftSubTree->leafSymmetricDifference(other->leftSubTree->leafList);
+      temp = this->leftSubTree->leafSymmetricDifference(other->leftSubTree->leafList());
       if (temp.size() != sizediff) {
-	temp = this->leftSubTree->leafSymmetricDifference(other->rightSubTree->leafList);
+	temp = this->leftSubTree->leafSymmetricDifference(other->rightSubTree->leafList());
       }
       return temp;
     }
@@ -130,9 +144,9 @@ set<int> newickTreeNode::getRecombined (newickTreeNode * other) {
       float leftProp = this->leftSubTree->branchLen;
       leftProp = leftProp/(leftProp+this->rightSubTree->branchLen);
       if (drand48() < leftProp)
-	temp = this->leftSubTree->leafList;
+	temp = this->leftSubTree->leafList();
       else
-	temp = this->rightSubTree->leafList;
+	temp = this->rightSubTree->leafList();
       return temp;
     }
     // the length of the left subtree branches are different - leaf lists
@@ -142,9 +156,9 @@ set<int> newickTreeNode::getRecombined (newickTreeNode * other) {
       float leftProp = this->leftSubTree->leftSubTree->branchLen;
       leftProp = leftProp/(leftProp+this->leftSubTree->rightSubTree->branchLen);
       if (drand48() < leftProp)
-	temp = this->leftSubTree->leftSubTree->leafList;
+	temp = this->leftSubTree->leftSubTree->leafList();
       else
-	temp = this->leftSubTree->rightSubTree->leafList;
+	temp = this->leftSubTree->rightSubTree->leafList();
       return temp;
     }
     // the length of the right subtree branches are different - leaf lists
@@ -154,9 +168,9 @@ set<int> newickTreeNode::getRecombined (newickTreeNode * other) {
       float leftProp = this->rightSubTree->leftSubTree->branchLen;
       leftProp = leftProp/(leftProp+this->rightSubTree->rightSubTree->branchLen);
       if (drand48() < leftProp)
-	temp = this->rightSubTree->leftSubTree->leafList;
+	temp = this->rightSubTree->leftSubTree->leafList();
       else
-	temp = this->rightSubTree->rightSubTree->leafList;
+	temp = this->rightSubTree->rightSubTree->leafList();
       return temp;      
     }
     // This is not the tree minimal tree of recombination - look at the left and right 
@@ -183,8 +197,8 @@ set<int> newickTreeNode::getRecombinedAdjoint(const set<int> leaves) {
   }
   // return sister subtree's leaf list
   if (temp == temp->parent->leftSubTree)
-    return temp->parent->rightSubTree->leafList;
-  return temp->parent->leftSubTree->leafList;
+    return temp->parent->rightSubTree->leafList();
+  return temp->parent->leftSubTree->leafList();
 }
 
 newickTreeNode * newickTreeNode::findLeaf(int leafNodeName) {
@@ -207,8 +221,8 @@ newickTreeNode * newickTreeNode::findLeaf(int leafNodeName) {
 }
 
 int newickTreeNode::minLeafNode(){
-  if (leafList.empty()) return -1;
-  return *(leafList.begin());
+  if (leafList().empty()) return -1;
+  return *(leafList().begin());
 }
 
 void newickTreeNode::printTree() {
@@ -231,11 +245,9 @@ void newickTreeNode::printTree() {
 }
 
 bool newickTreeNode::isCommonAncestor(const set<int> givenNodes) {
-  //  cout << "Given: "; copy(givenNodes.begin(), givenNodes.end(), ostream_iterator<int>(cout, " ")); cout << endl;
-  //  cout << "Leaflist: "; copy(leafList.begin(), leafList.end(), ostream_iterator<int>(cout, " ")); cout << endl;
+  set<int> tempLeafList = leafList();
   for (set<int>::iterator iit = givenNodes.begin(); iit != givenNodes.end(); iit++) {
-    //    cout << " _ " << *iit << " _ " << endl;
-    if (leafList.find(*iit) == leafList.end())
+    if (tempLeafList.find(*iit) == tempLeafList.end())
       return false;
   }
   return true;
